@@ -111,7 +111,7 @@ int main() {
   o.draftSeed = 20261004;
   o.draftName = "LIVING TEST";
   CHECK(createWorld());
-  CHECK(o.generator == 5);
+  CHECK(o.generator == 6);
   o.generator = 2; // v0.4 biome regression; v3 is covered by canopy_tests.
   CHECK(v.food == 100 && v.stamina == 100);
   int crossings1 = 0, crossings2 = 0;

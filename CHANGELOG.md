@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- **Generator 6 "Earth relief"** for newly created worlds (`native/generation6.hpp`):
+  continental elevation, ridged mountain chains gated by an orogenic belt mask,
+  foothills, a treeline, walkable rock benches and downhill river drainage, with
+  the opening valley softened so the first camps stay habitable. Generators 1-5
+  and all existing saved geography are untouched; the save container format is
+  unchanged. New `earth_relief` test (1087 assertions) covers legacy purity,
+  determinism, quality independence and spawn-to-boss connectivity.
+  See `docs/earth-relief/STATUS.md`.
 - Repository scaffolding for public development: GitHub Actions CI
   (native build + `ctest`, source-manifest check, clang-format), contribution
   guide, security policy, issue/PR templates, `.editorconfig` and this changelog.

@@ -207,7 +207,7 @@ bool header(const std::string &body, WorldRecord &r) {
   if (version >= 2 && !(f >> r.generator))
     return false;
   return magic == "DWFRONTIER" && (version >= 1 && version <= 4) &&
-         r.generator >= 1 && r.generator <= 5 && r.name.size() <= 24 &&
+         r.generator >= 1 && r.generator <= 6 && r.name.size() <= 24 &&
          std::isfinite(x) && std::isfinite(y) && std::abs(x) <= WORLD_LIMIT &&
          std::abs(y) <= WORLD_LIMIT && std::isfinite(r.seconds) &&
          r.seconds >= 0 && r.seconds <= 1e9;
@@ -356,9 +356,11 @@ struct Tile {
 };
 } // namespace av
 #include "generation5.hpp"
+#include "generation6.hpp"
 namespace av {
 Tile baseTileAt(int64_t x, int64_t y) {
-  if (o.generator >= 5) return naturalTileAt(x,y);
+  if (o.generator >= 6) return earthTileAt(x, y);
+  if (o.generator == 5) return naturalTileAt(x,y);
   Tile t;
   t.biome = uint8_t(biomeAt(x, y));
   Camp c = campAt(floorDiv(x, CELL), floorDiv(y, CELL));
@@ -726,7 +728,7 @@ bool createWorld() {
   av::j = Journey{};
   av::j.stock[SEED] = 3;
   o.atlasLarge = false;
-  o.generator = 5;
+  o.generator = 6;
   o.seed = o.draftSeed;
   o.name = cleanName(o.draftName);
   o.slain.clear();

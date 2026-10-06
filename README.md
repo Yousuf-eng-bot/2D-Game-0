@@ -81,7 +81,7 @@ Optional `APK_OUTPUT=/path/to/output.apk` selects another output path. Future AP
 ## Current functionality and limitations
 
 - Low preserves 0.8's appearance/preferences. Medium adds procedural detailed actors, a CPU G-buffer and real GLES normal lighting at 640×360 with nearest display scaling.
-- New worlds use generator 5 organic paths/forest composition. Existing generators 1–4 and saved geography remain intact. Quality never selects world generation or combat difficulty.
+- New worlds use **generator 6 Earth relief**: continental elevation, ridged mountain chains, a treeline, stony highland and downhill river drainage, with the opening valley kept habitable. Existing generators 1–5 and saved geography remain intact — see `docs/earth-relief/STATUS.md`. Quality never selects world generation or combat difficulty.
 - Most recent fix: thermal status/decision synchronization; Android thermal 2 keeps Medium at 30 cap, 3 keeps reduced-effects Medium at 20 cap, critical 4–6 uses mandatory Low safety. Caps are not measured FPS.
 - **The owner has not yet confirmed the fix on the Galaxy F23.** No successful physical-phone or emulator runtime validation is claimed for 0.9.2.
 - Full bespoke wildlife/props/inventory art, GPU-atlas batching/compression, advanced parallax/fog and physical-device performance validation remain incomplete.

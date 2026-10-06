@@ -84,7 +84,7 @@ int main() {
   o.draftName = "JOURNEY TEST";
   o.draftSeed = 20261004;
   CHECK(createWorld());
-  CHECK(o.generator == 5 && j.stock[SEED] == 3);
+  CHECK(o.generator == 6 && j.stock[SEED] == 3);
   int high = 0, water = 0, bridges = 0;
   for (int yy = -140; yy <= 140; yy++)
     for (int xx = -140; xx <= 140; xx++) {

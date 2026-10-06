@@ -61,7 +61,7 @@ int main() {
   o.draftSeed = 20261004;
   o.draftName = "WILD EARTH TEST";
   CHECK(createWorld());
-  CHECK(o.generator == 5 && w.wood == 0 && w.clockOffset == 0);
+  CHECK(o.generator == 6 && w.wood == 0 && w.clockOffset == 0);
   CHECK(exploredAt(0, 0));
   CHECK(!exploredAt(13, 0));
   CHECK(!exploredAt(9, 9));

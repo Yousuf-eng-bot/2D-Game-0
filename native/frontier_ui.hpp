@@ -154,6 +154,8 @@ void frontierMenu() {
              DIM);
         text(124, y + 42,
              r.recovered        ? "BACKUP AVAILABLE"
+             : r.generator >= 6 ? "EARTH RELIEF / MOUNTAINS AND RIVERS"
+             : r.generator == 5 ? "ORGANIC PATHS / FOREST COMPOSITION"
              : r.generator == 3 ? "VAST BIOMES / EXPLORATION FOG"
              : r.generator == 2 ? "GREAT BIOMES / HARD SURVIVAL"
                                 : "ORIGINAL GEOGRAPHY / HARD SURVIVAL",

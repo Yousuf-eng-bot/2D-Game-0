@@ -6,7 +6,7 @@ int checks=0;
 #define CHECK(x) do{checks++;if(!(x)){std::cerr<<"FAIL "<<__LINE__<<": "#x"\n";return 1;}}while(0)
 int main(){
  auto root=std::filesystem::temp_directory_path()/("medium-test-"+hexId(entropy()));
- boot(root.string());o.draftName="MEDIUM TEST";o.draftSeed=20261005;CHECK(createWorld());CHECK(o.generator==5);
+ boot(root.string());o.draftName="MEDIUM TEST";o.draftSeed=20261005;CHECK(createWorld());CHECK(o.generator==6);
  CHECK(!mediumEnabled());
  graphicsController.setDevice({8192,3,4096,false,true,true});
  u.tips=false;g.toastTime=0;motionBlur=false;g.shake=false;

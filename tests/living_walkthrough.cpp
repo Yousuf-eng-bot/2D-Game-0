@@ -33,7 +33,7 @@ int main() {
   submitText(2, "20261004");
   tap(320, 318);
   advance(.8);
-  REQUIRE(g.openWorld && g.scene == PLAY && o.generator == 5);
+  REQUIRE(g.openWorld && g.scene == PLAY && o.generator == 6);
   // Legacy straight-road input regression: freeze its original geography.
   // V5 route-following is independently tested in medium_tests.cpp.
   o.generator=4; placePlayer(0,0); flushOpenWorld();
