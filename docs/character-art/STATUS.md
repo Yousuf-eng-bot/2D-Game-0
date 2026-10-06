@@ -136,3 +136,21 @@ gold is measurably brighter than the bandit's trim.
 - Art quality is a first pass. Proportions were corrected once after review,
   but the front-facing torso still reads flat and the sprites have not been
   hand-tuned pixel by pixel.
+
+## Test APK
+
+`.github/workflows/apk.yml` builds an installable APK on every push to the
+working branch and uploads it as the run artifact **`death-world-test-apk`**.
+First successful run: GitHub Actions run `37442450060`, job time 1m12s, three
+ABIs, signed with a **disposable test key**.
+
+To get it: repository → **Actions** → **Test APK** → newest run → *Artifacts* →
+`death-world-test-apk` → unzip → `Death-World-Test.apk`.
+
+> ⚠️ This APK is signed with a throwaway identity, not the original release
+> key, so Android will refuse to install it over the existing Death World.
+> Install it **alongside** on a test device or profile. Do **not** uninstall
+> the existing game to make room - that deletes save progress, because the
+> game disables ordinary Android backup. For a real update, build locally with
+> `SIGNING_KEY=/private/path/ashen-prototype.jks bash tools/build_apk.sh` and
+> raise `versionCode`.
