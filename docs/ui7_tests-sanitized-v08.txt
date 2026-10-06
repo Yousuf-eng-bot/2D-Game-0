@@ -1,0 +1,5 @@
+PASS default Bangla, shaped fonts, UI home/create flow, simple HUD hit coverage=12.3876%
+PASS 12 safe preset/size combinations, multitouch ownership/cancel, menu pause, language/preferences persistence and drag/apply/cancel validation
+PASS bilingual menu bounds, craft/body/weapon/stance bindings, contextual axe/hunt restore, save/resume, deletion confirmation and Classic routes
+PASS authentic 0.6 save + 3875 terrain/height records unchanged, inventory/tools/base/crops/checkpoint preserved, preferences independent
+ALL CLEAR UI CHECKS PASSED: 82260 assertions

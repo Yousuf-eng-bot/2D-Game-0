@@ -1,0 +1,27 @@
+Test project /home/user/death-world-0.8/build/vista-native
+      Start  1: vista_graphics
+ 1/11 Test  #1: vista_graphics ...................   Passed    0.36 sec
+      Start  2: clear_ui_walkthrough
+ 2/11 Test  #2: clear_ui_walkthrough .............   Passed    0.29 sec
+      Start  3: clear_ui
+ 3/11 Test  #3: clear_ui .........................   Passed    0.88 sec
+      Start  4: journey_walkthrough
+ 4/11 Test  #4: journey_walkthrough ..............   Passed    0.03 sec
+      Start  5: journey
+ 5/11 Test  #5: journey ..........................   Passed    0.10 sec
+      Start  6: wild_earth
+ 6/11 Test  #6: wild_earth .......................   Passed    0.15 sec
+      Start  7: survival_walkthrough
+ 7/11 Test  #7: survival_walkthrough .............   Passed    0.24 sec
+      Start  8: living
+ 8/11 Test  #8: living ...........................   Passed    0.11 sec
+      Start  9: frontier
+ 9/11 Test  #9: frontier .........................   Passed    4.65 sec
+      Start 10: core
+10/11 Test #10: core .............................   Passed    1.94 sec
+      Start 11: playthrough
+11/11 Test #11: playthrough ......................   Passed    1.23 sec
+
+100% tests passed out of 11
+
+Total Test time (real) =   9.99 sec

@@ -1,0 +1,54 @@
+name: Bug report
+description: Something behaves incorrectly in the game or the build
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe the problem and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. ...
+        2. ...
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version / commit
+      placeholder: "0.9.2 (versionCode 11) or commit SHA"
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Gameplay / simulation
+        - Rendering / graphics quality
+        - Audio
+        - Save / migration
+        - Android build or packaging
+        - Host build / tests
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Device model + Android version, or host OS/compiler. Mention quality level and thermal state if relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: logcat, ctest output or stack traces.
+      render: shell

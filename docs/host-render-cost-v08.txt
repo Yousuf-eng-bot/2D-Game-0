@@ -1,0 +1,19 @@
+HOST CPU RENDER ONLY; dt=0; 640x360; no Android display, gameplay, audio, GPU or thermal measurement. Warm cache, 120 frames/scene.
+quality=0 scene=0 mean_ms=4.4576 median_ms=4.34538 p95_ms=5.01362
+quality=0 scene=1 mean_ms=2.82473 median_ms=2.61014 p95_ms=3.69015
+quality=0 scene=2 mean_ms=2.66718 median_ms=2.47925 p95_ms=3.77224
+quality=0 scene=3 mean_ms=2.07209 median_ms=1.93508 p95_ms=2.51239
+quality=0 scene=4 mean_ms=1.95192 median_ms=1.93284 p95_ms=2.14683
+quality=0 scene=5 mean_ms=3.92203 median_ms=3.40557 p95_ms=5.17991
+quality=1 scene=0 mean_ms=6.59545 median_ms=6.27998 p95_ms=7.64341
+quality=1 scene=1 mean_ms=4.9676 median_ms=5.07847 p95_ms=5.2912
+quality=1 scene=2 mean_ms=7.12937 median_ms=6.62287 p95_ms=9.10446
+quality=1 scene=3 mean_ms=5.35553 median_ms=5.08747 p95_ms=6.65716
+quality=1 scene=4 mean_ms=5.02871 median_ms=4.96564 p95_ms=6.3384
+quality=1 scene=5 mean_ms=7.44917 median_ms=7.41487 p95_ms=8.65646
+quality=2 scene=0 mean_ms=6.28376 median_ms=6.00712 p95_ms=8.13368
+quality=2 scene=1 mean_ms=4.65531 median_ms=4.10168 p95_ms=6.56568
+quality=2 scene=2 mean_ms=6.21333 median_ms=5.88778 p95_ms=7.91823
+quality=2 scene=3 mean_ms=5.88942 median_ms=5.8056 p95_ms=6.40404
+quality=2 scene=4 mean_ms=4.90604 median_ms=4.74648 p95_ms=6.07036
+quality=2 scene=5 mean_ms=7.05504 median_ms=7.06997 p95_ms=7.45827

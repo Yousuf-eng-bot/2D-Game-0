@@ -1,0 +1,12 @@
+PASS original certificate, v1/v2/v3 verification: 6860d6fd6332594af5f30916fb67d9717088f63ebecb1c8d34476d27ae8f710b
+PASS package, label, code 10 / 0.9.1, minimum API23 / target API35
+PASS no requested Android permissions
+PASS ZIP alignment
+PASS ZIP integrity and exact bytes of all 38 bundled assets/licenses
+PASS 26 short PCM effects/beds below SoundPool decoded-size bound; 6 stored 38.4s PCM music loops
+PASS native machine, 16KB ELF LOAD alignment and all 18 JNI entry points: arm64-v8a
+PASS native machine, 16KB ELF LOAD alignment and all 18 JNI entry points: armeabi-v7a
+PASS native machine, 16KB ELF LOAD alignment and all 18 JNI entry points: x86_64
+APK bytes: 16891114
+APK SHA256: 73d66cdf247f8ba09535d71cdcfdc059b36eaf3eb4ad290bfc338ca88f486fd8
+NOTE: Artifact/native validation only; not a device install, gameplay or audio/FPS measurement.

@@ -1,0 +1,14 @@
+* text=auto
+*.sh text eol=lf
+*.py text eol=lf
+*.hpp text eol=lf
+*.cpp text eol=lf
+*.java text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.xml text eol=lf
+*.sav -text
+*.wav -text
+*.bin -text
+*.png -text
+*.ttf -text

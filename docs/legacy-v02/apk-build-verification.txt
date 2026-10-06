@@ -1,0 +1,41 @@
+Compiling C++20 for arm64-v8a...
+Compiling C++20 for armeabi-v7a...
+Compiling C++20 for x86_64...
+Note: /home/user/death-world/android/java/com/ashenveil/game/MainActivity.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Verifies
+Verified using v1 scheme (JAR signing): true
+Verified using v2 scheme (APK Signature Scheme v2): true
+Verified using v3 scheme (APK Signature Scheme v3): true
+Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+Verified using v4 scheme (APK Signature Scheme v4): false
+Verified for SourceStamp: false
+Number of signers: 1
+Signer #1 certificate DN: CN=Ashen Veil Prototype, O=Independent Prototype, C=BD
+Signer #1 certificate SHA-256 digest: 6860d6fd6332594af5f30916fb67d9717088f63ebecb1c8d34476d27ae8f710b
+Signer #1 certificate SHA-1 digest: a52dc57fecf5301e641fc73def96028b7a52ca47
+Signer #1 certificate MD5 digest: 45ff5fbaa6480ba26ed88d938c540a86
+Signer #1 key algorithm: RSA
+Signer #1 key size (bits): 2048
+Signer #1 public key SHA-256 digest: 2310437ad6acb8717be649a7467637be1d479984f120ffd99358a3334cc61ab7
+Signer #1 public key SHA-1 digest: a52c173dd7e3f1df801d6f5cf57b62a502b94942
+Signer #1 public key MD5 digest: 8fe281c654d1a0b8d05e24573a46f63c
+package: name='com.ashenveil.game' versionCode='2' versionName='0.2.0' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'
+sdkVersion:'23'
+targetSdkVersion:'35'
+application-label:'Death World'
+application-icon-160:'res/drawable/icon.xml'
+application: label='Death World' icon='res/drawable/icon.xml'
+launchable-activity: name='com.ashenveil.game.MainActivity'  label='' icon=''
+feature-group: label=''
+  uses-feature: name='android.hardware.faketouch'
+  uses-implied-feature: name='android.hardware.faketouch' reason='default feature for all apps'
+  uses-feature: name='android.hardware.screen.landscape'
+  uses-implied-feature: name='android.hardware.screen.landscape' reason='one or more activities have specified a landscape orientation'
+main
+supports-screens: 'small' 'normal' 'large' 'xlarge'
+supports-any-density: 'true'
+locales: '--_--'
+densities: '160'
+native-code: 'arm64-v8a' 'armeabi-v7a' 'x86_64'
+APK created: /home/user/deliverables/death-world/Death-World-0.2.apk

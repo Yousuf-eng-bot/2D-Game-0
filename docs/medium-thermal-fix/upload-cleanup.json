@@ -1,0 +1,34 @@
+{
+  "authorization": "Delete previous user uploads; retain both images attached to this message.",
+  "deleted": [
+    {
+      "name": "Screenshot_20261005_125528.jpg",
+      "bytes": 1075133
+    },
+    {
+      "name": "Screenshot_20261005_130230.jpg",
+      "bytes": 1089190
+    },
+    {
+      "name": "Screenshot_20261005_161137.jpg",
+      "bytes": 276788
+    },
+    {
+      "name": "Screenshot_20261005_161221.jpg",
+      "bytes": 1335813
+    },
+    {
+      "name": "Screenshot_20261005_161244.jpg",
+      "bytes": 1264930
+    },
+    {
+      "name": "Screenshot_20261005_195217.jpg",
+      "bytes": 1390097
+    }
+  ],
+  "retained": [
+    "Screenshot_20261005_204729.jpg",
+    "Screenshot_20261005_204802.jpg"
+  ],
+  "freed_bytes": 6431951
+}

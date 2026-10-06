@@ -1,0 +1,46 @@
+# Generated tools, caches and build products
+/.cache/
+/build/
+/dist/
+/out/
+/.venv/
+/node_modules/
+__pycache__/
+*.pyc
+*.o
+*.so
+*.class
+*.dex
+*.apk
+*.aab
+*.idsig
+*.zip
+*.mp4
+
+# Never commit signing material, tokens, credentials or local environment files.
+/.signing/
+/.android/
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.pem
+*.key
+.env
+.env.*
+!.env.example
+.netrc
+.git-credentials
+credentials.json
+local.properties
+
+# Private uploads, local game saves, packaged releases
+/uploads/
+/deliverables/
+*.sav
+!tests/fixtures/*.sav
+
+# Runtime WAVs, cover.bin, fonts, generated ui7_fonts.hpp and synthetic test
+# fixtures are source inputs and MUST remain tracked in the GitHub repository.
+.DS_Store
+Thumbs.db

@@ -1,0 +1,9 @@
+    versionCode=1 minSdk=23 targetSdk=35
+    versionName=0.1.0
+Performing Streamed Install
+/home/user/deliverables/death-world/Death-World-0.2.apk: 1 file pushed, 0 skipped. 2865.7 MB/s (2500540 bytes in 0.001s)
+Performing Push Install
+Success
+    versionCode=2 minSdk=23 targetSdk=35
+    versionName=0.2.0
+Starting: Intent { cmp=com.ashenveil.game/.MainActivity }

@@ -1,0 +1,21 @@
+World 1, seed 0, DAWNBLADE: VICTORY / 55s / kills 35 / HP 177 / level 5
+World 1, seed 0, RIFT AXE: VICTORY / 53s / kills 34 / HP 193 / level 5
+World 1, seed 0, WIND BOW: VICTORY / 110s / kills 35 / HP 188 / level 5
+World 1, seed 1, DAWNBLADE: VICTORY / 57s / kills 34 / HP 172 / level 5
+World 1, seed 1, RIFT AXE: VICTORY / 67s / kills 31 / HP 181 / level 5
+World 1, seed 1, WIND BOW: VICTORY / 105s / kills 34 / HP 154 / level 5
+World 1, seed 2, DAWNBLADE: VICTORY / 62s / kills 32 / HP 193 / level 5
+World 1, seed 2, RIFT AXE: VICTORY / 77s / kills 34 / HP 168 / level 5
+World 1, seed 2, WIND BOW: VICTORY / 99s / kills 33 / HP 139 / level 5
+World 2, seed 0, DAWNBLADE: VICTORY / 78s / kills 39 / HP 118 / level 5
+World 2, seed 0, RIFT AXE: VICTORY / 69s / kills 37 / HP 127 / level 5
+World 2, seed 0, WIND BOW: VICTORY / 146s / kills 39 / HP 119 / level 5
+World 2, seed 1, DAWNBLADE: VICTORY / 83s / kills 39 / HP 153 / level 5
+World 2, seed 1, RIFT AXE: VICTORY / 98s / kills 37 / HP 98 / level 5
+World 2, seed 1, WIND BOW: VICTORY / 122s / kills 37 / HP 173 / level 5
+World 2, seed 2, DAWNBLADE: VICTORY / 82s / kills 39 / HP 120 / level 5
+World 2, seed 2, RIFT AXE: VICTORY / 80s / kills 38 / HP 109 / level 5
+World 2, seed 2, WIND BOW: VICTORY / 141s / kills 39 / HP 115 / level 5
+Input-only agent victories: 18/18 (not a human difficulty measurement).
+Stationary guardian fixture 1: DEFEAT after 11s
+Stationary guardian fixture 2: DEFEAT after 14s

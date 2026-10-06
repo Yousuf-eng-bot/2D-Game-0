@@ -1,0 +1,2 @@
+PASS natural-world ordinary-input route 95 tiles; HP 120; no grants/invulnerability
+PASS 23194 assertions; 8 directions x 14 clips x 8 frames x 8 roles; CPU cache bounded; policy independent of game state

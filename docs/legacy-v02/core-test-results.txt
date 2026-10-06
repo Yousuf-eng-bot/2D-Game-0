@@ -1,0 +1,12 @@
+Death World 0.2 core regression checks
+PASS old save migration, new round trip, immutable legacy backup, corrupt-save recovery
+PASS both worlds / 200 encounter seeds / walkable monster and boss routes
+PASS analog acceleration, diagonal normalization, braking, independent touch, lifecycle pause
+PASS animation-timed sword/axe hits, once-per-swing payloads, ranged arrows, switch cooldown protection
+PASS overlapping piercing arrows hit each target once
+PASS two rechargeable dodges, flask limits, ward mitigation and hurt feedback
+PASS shielded guardians, three phases, at least four attack patterns per boss, deferred summons
+PASS boss stagger resistance, projectile-kill iterator safety, one-time reward and victory flow
+PASS cross-weapon equipment bonuses, equipped-item protection, loot constraints
+PASS distinct locomotion poses and 3,000-frame sanitizer/render smoke
+ALL PASSED: 29422 assertions

@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  native:
+    name: Native build & tests (Ubuntu)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake zlib1g-dev \
+            libegl1-mesa-dev libgles2-mesa-dev libgl1-mesa-dri
+
+      - name: Configure
+        run: cmake -S . -B build/native -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build/native -j2
+
+      - name: List registered tests
+        run: ctest --test-dir build/native -N
+
+      - name: Test
+        run: ctest --test-dir build/native --output-on-failure
+
+  source-integrity:
+    name: Source manifest check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Verify exported source snapshot
+        continue-on-error: true
+        run: python3 tools/check_source.py
+
+  format:
+    name: clang-format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check formatting of native/ and tests/
+        continue-on-error: true
+        run: |
+          clang-format --version
+          find native tests -name '*.cpp' -o -name '*.hpp' \
+            | grep -v ui7_fonts.hpp \
+            | xargs clang-format --dry-run --Werror

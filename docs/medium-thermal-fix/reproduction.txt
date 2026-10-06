@@ -1,0 +1,2 @@
+0.9.1 between deviceProfile and next frame: raw=2, active=Low, hotReason=1
+0.9.2 immediately after deviceProfile (no frame): raw=2, active=Medium, cap=30, status=Medium: thermal 30 cap

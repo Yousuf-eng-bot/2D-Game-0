@@ -1,0 +1,3 @@
+PASS strict config, checked atomic persistence, backup/migration, 10000 malformed-input probes
+PASS readiness gate, recommendation, 30/60 caps, mandatory heat/memory safety, Medium battery cap, staged 60-to-30-to-Low fallback and manual retry
+PASS 12375 policy/config assertions; NOT a GPU/device validation

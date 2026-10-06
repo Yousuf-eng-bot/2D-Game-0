@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-05",
+  "request": "Free workspace space; remove disposable generated files only.",
+  "removed": [
+    {
+      "path": ".cache",
+      "allocated_bytes_before": 9741058048
+    },
+    {
+      "path": "death-world-0.8/build",
+      "allocated_bytes_before": 118483456
+    },
+    {
+      "path": "death-world-0.8/.cache",
+      "allocated_bytes_before": 0
+    }
+  ],
+  "removed_allocated_bytes": 9859541504,
+  "filesystem_free_bytes_before": 10752139264,
+  "filesystem_free_bytes_after": 20611207168,
+  "retained_regular_files_verified_unchanged": 284,
+  "preserved": [
+    "All release APKs and media including latest 0.9.1",
+    "Complete 0.5 and 0.8 release backups",
+    "Current source, source checkpoint, test fixtures and validation reports",
+    "Uploaded screenshots",
+    "Private signing key"
+  ],
+  "rebuild_note": "Run tools/setup_android.py to restore SDK/NDK; build directories regenerate. Audio restores from the retained 0.8 APK."
+}

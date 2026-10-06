@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-05",
+  "verified_replacement_sha256": "f21feccb7a27902212792b5adaac5c3db318b69763675517fd2c3b193d8a1f85",
+  "authorized_obsolete_apk_deleted": {
+    "path": "deliverables/death-world-0.9.1/Death-World-0.9.1-Medium-Fix.apk",
+    "bytes": 16891114,
+    "sha256": "73d66cdf247f8ba09535d71cdcfdc059b36eaf3eb4ad290bfc338ca88f486fd8",
+    "authorization": "User approved replacing old 0.9.1 APK after new APK is verified."
+  },
+  "temporary_files_removed": [
+    {
+      "path": ".cache",
+      "allocated_bytes": 3244315648
+    },
+    {
+      "path": "death-world-0.8/build",
+      "allocated_bytes": 119667200
+    }
+  ],
+  "runtime_wav_duplicates_removed": 32,
+  "latest_two_uploads_retained": true,
+  "protected_0_5_0_8_0_9_releases_verified": true
+}

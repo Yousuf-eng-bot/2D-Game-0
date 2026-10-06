@@ -1,0 +1,6 @@
+0.9 policy (reproduced):
+60-second 30-FPS pacing, requested Medium/60: active=Low, effective cap=60
+Battery saver: active=Low, effective cap=30
+0.9.1 policy (same input):
+60-second 30-FPS pacing, requested Medium/60: active=Medium, effective cap=30
+Battery saver: active=Medium, effective cap=30

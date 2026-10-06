@@ -1,0 +1,29 @@
+Test project /home/user/death-world-0.8/build/medium-audit
+      Start  1: graphics_quality_policy
+ 1/12 Test  #1: graphics_quality_policy ..........   Passed    0.03 sec
+      Start  2: vista_graphics
+ 2/12 Test  #2: vista_graphics ...................   Passed    0.44 sec
+      Start  3: clear_ui_walkthrough
+ 3/12 Test  #3: clear_ui_walkthrough .............   Passed    0.43 sec
+      Start  4: clear_ui
+ 4/12 Test  #4: clear_ui .........................   Passed    1.02 sec
+      Start  5: journey_walkthrough
+ 5/12 Test  #5: journey_walkthrough ..............   Passed    0.04 sec
+      Start  6: journey
+ 6/12 Test  #6: journey ..........................   Passed    0.14 sec
+      Start  7: wild_earth
+ 7/12 Test  #7: wild_earth .......................   Passed    0.16 sec
+      Start  8: survival_walkthrough
+ 8/12 Test  #8: survival_walkthrough .............   Passed    0.32 sec
+      Start  9: living
+ 9/12 Test  #9: living ...........................   Passed    0.15 sec
+      Start 10: frontier
+10/12 Test #10: frontier .........................   Passed    5.84 sec
+      Start 11: core
+11/12 Test #11: core .............................   Passed    2.41 sec
+      Start 12: playthrough
+12/12 Test #12: playthrough ......................   Passed    1.51 sec
+
+100% tests passed out of 12
+
+Total Test time (real) =  12.49 sec

@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-05",
+  "authorization": "User explicitly chose remove_old_large_files in archive_cleanup question.",
+  "removed": [
+    {
+      "path": "deliverables/death-world-0.6/Death-World-0.6-source.zip",
+      "bytes": 19766670,
+      "sha256": "891930cc2509d394329fe6ac9cc34687b25c9e5ce7aabe308c9d9063665ea87e"
+    },
+    {
+      "path": "deliverables/death-world-0.6/Death-World-0.6.apk",
+      "bytes": 14740552,
+      "sha256": "d7e45d165ae599373ff92818c2b1109f97ed6120f483d4c2ebbb930e0d603a55"
+    },
+    {
+      "path": "deliverables/death-world-0.6/Death-World-0.6-Preview.mp4",
+      "bytes": 3549438,
+      "sha256": "7997f489e4e380d09fce1a15c72cbc8747865a7c8e7ac5378fca22bc4084b04f"
+    },
+    {
+      "path": "deliverables/death-world-0.7/Death-World-0.7.apk",
+      "bytes": 16526570,
+      "sha256": "26fd73b8d0d5841caf3d3baeeef3b210ad80f3e42ac307e6b7103e6a296d5271"
+    },
+    {
+      "path": "deliverables/death-world-0.7/Death-World-0.7-UI-Preview.mp4",
+      "bytes": 2501447,
+      "sha256": "d434f40c4a6950fec72b2008a99e774e8bca53f72001960aac675368b549e091"
+    }
+  ],
+  "freed_bytes": 57084677,
+  "protected_files_checked": 16,
+  "protected_hashes_unchanged": true,
+  "protected_categories": [
+    "complete 0.5 release and backup",
+    "complete 0.8 release",
+    "uploaded screenshots",
+    "private signing key (digest not disclosed)"
+  ]
+}

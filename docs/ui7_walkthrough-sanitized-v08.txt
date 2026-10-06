@@ -1,0 +1,1 @@
+PASS new Bengali UI: home/create > weapon/hunt selection > tree/log pickup > recipes > place bench > wood pick > hold mine > stone pickup > save/exit/resume. Alive HP=120, no HP/items/teleport grants.

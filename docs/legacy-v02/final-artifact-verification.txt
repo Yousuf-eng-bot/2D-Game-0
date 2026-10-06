@@ -1,0 +1,18 @@
+PASS final archive integrity
+Executable equality vs emulator-installed build: lib/arm64-v8a/libashen.so False
+Executable equality vs emulator-installed build: lib/armeabi-v7a/libashen.so False
+Executable equality vs emulator-installed build: lib/x86_64/libashen.so False
+Executable equality vs emulator-installed build: classes.dex True
+Native libraries changed for the final per-projectile target-tracking correction; final native build not reinstalled on emulator. Java bridge is unchanged.
+PASS final game license packaged
+PASS title asset and 14 uncompressed WAV assets
+PASS all three rebuilt native libraries packaged
+PASS original signing identity retained: Signer #1 certificate SHA-256 digest: 6860d6fd6332594af5f30916fb67d9717088f63ebecb1c8d34476d27ae8f710b
+PASS package/version/label
+PASS no Android permissions
+PASS ZIP alignment
+PASS 16 KB ELF LOAD alignment: arm64-v8a
+PASS 16 KB ELF LOAD alignment: armeabi-v7a
+PASS 16 KB ELF LOAD alignment: x86_64
+APK bytes: 2500540
+APK SHA256: 61634e8abd743bd61b023e714cf6ec1f2dd2926aa0e2a94a36e318bd9dfe335a

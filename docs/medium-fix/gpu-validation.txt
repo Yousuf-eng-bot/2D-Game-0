@@ -1,0 +1,5 @@
+GL driver: llvmpipe (LLVM 19.1.7, 256 bits)
+PASS height-field point-light shadow changes 6431 pixels
+PASS Low exact-pixel GPU present; actual normal shader changes 42534 pixels; UI preserved; 24 switches; 3 EGL context recreations
+PASS exact nearest 2x upscale of logical lighting, battery-saver Medium actual GPU render, severe-heat fallback and recovery
+PASS 12850 GPU assertions. Host Mesa/llvmpipe is not a physical phone FPS measurement.

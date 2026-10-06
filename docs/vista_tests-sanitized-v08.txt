@@ -1,0 +1,1 @@
+PASS Vista: materials, 360 tree sprites, deterministic non-mutating rendering, elevation projection, soft dynamic shadows, scenery-only focus, light occlusion, quality/prefs and 60 biome-quality-clock combinations. 20419 assertions

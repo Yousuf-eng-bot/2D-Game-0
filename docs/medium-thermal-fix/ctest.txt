@@ -1,0 +1,33 @@
+Test project /home/user/death-world-0.8/build/thermal-fix
+      Start  1: medium_integration
+ 1/14 Test  #1: medium_integration ...............   Passed    0.64 sec
+      Start  2: medium_actual_gpu
+ 2/14 Test  #2: medium_actual_gpu ................   Passed    0.99 sec
+      Start  3: graphics_quality_policy
+ 3/14 Test  #3: graphics_quality_policy ..........   Passed    0.03 sec
+      Start  4: vista_graphics
+ 4/14 Test  #4: vista_graphics ...................   Passed    0.56 sec
+      Start  5: clear_ui_walkthrough
+ 5/14 Test  #5: clear_ui_walkthrough .............   Passed    0.58 sec
+      Start  6: clear_ui
+ 6/14 Test  #6: clear_ui .........................   Passed    1.38 sec
+      Start  7: journey_walkthrough
+ 7/14 Test  #7: journey_walkthrough ..............   Passed    0.04 sec
+      Start  8: journey
+ 8/14 Test  #8: journey ..........................   Passed    0.16 sec
+      Start  9: wild_earth
+ 9/14 Test  #9: wild_earth .......................   Passed    0.16 sec
+      Start 10: survival_walkthrough
+10/14 Test #10: survival_walkthrough .............   Passed    0.29 sec
+      Start 11: living
+11/14 Test #11: living ...........................   Passed    0.16 sec
+      Start 12: frontier
+12/14 Test #12: frontier .........................   Passed    5.33 sec
+      Start 13: core
+13/14 Test #13: core .............................   Passed    2.68 sec
+      Start 14: playthrough
+14/14 Test #14: playthrough ......................   Passed    1.45 sec
+
+100% tests passed out of 14
+
+Total Test time (real) =  14.46 sec

@@ -1,0 +1,16 @@
+[
+  {
+    "kind": ".bin",
+    "bytes": 66355200,
+    "baseline_sha256": "1529cff756cf323337d772d6531e08d284a30e6e160180f086740ab2e28b8cc7",
+    "current_sha256": "1529cff756cf323337d772d6531e08d284a30e6e160180f086740ab2e28b8cc7",
+    "exact_match": true
+  },
+  {
+    "kind": ".bin.geo",
+    "bytes": 44096,
+    "baseline_sha256": "ecd1e1fa21afc0bc97f3c3637c2842ddee4799f962559ad8324c59bae2a3d742",
+    "current_sha256": "ecd1e1fa21afc0bc97f3c3637c2842ddee4799f962559ad8324c59bae2a3d742",
+    "exact_match": true
+  }
+]
