@@ -265,6 +265,9 @@ void boot(const std::string &path) {
     if (!loadOne(path + "/progress.sav"))
       loadOne(path + "/progress.sav.bak");
     loadArtwork(path + "/cover.bin");
+    if (!loadCharacterAtlas(path + "/characters.dwa"))
+      loadCharacterAtlas("android/assets/characters.dwa");
+    bindCharacterAtlas();
   }
   loadSettings();
   ui7Boot();
@@ -295,6 +298,7 @@ void frame(C *out, float dt) {
     tick(1.f / 60);
     g.acc -= 1.f / 60;
   }
+  updatePlayerAnim(dt);
   // Render-only interpolation never writes back into physics or persistent
   // position.
   bool smooth = g.openWorld && g.scene == PLAY && !g.overlay && dt > 0;

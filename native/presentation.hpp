@@ -1,5 +1,6 @@
 #pragma once
 #include "art.hpp"
+#include "char_anim.hpp"
 namespace av {
 void button(int x, int y, int w, int h, const std::string &s,
             bool active = true) {

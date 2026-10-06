@@ -1,6 +1,20 @@
 #pragma once
 namespace av {
 void drawJourneyRanger(int x, int y, float phase, bool moving) {
+  // Baked layered sprites when the character atlas shipped with the build;
+  // otherwise fall through to the original procedural ranger so the look is
+  // preserved on any build without the asset.
+  if (spriteCharactersReady()) {
+    float a = j.active ? j.aim : std::atan2(g.fy, g.fx);
+    int fy = y - int(j.z);
+    ellipse(x, y + 2, std::max(6, 13 - int(j.z / 8)), 4, 0xff364133);
+    int flash = g.hurtTime > 0 ? int(std::min(1.f, g.hurtTime / .22f) * 190) : 0;
+    if (g.hurtTime > 0 && int(g.time * 28) % 2 == 0)
+      flash = std::min(255, flash + 60);
+    drawCharActor(playerOutfit(), playerAnim, a, x, fy, PAL_PLAYER, flash);
+    drawBodyMarks(x, fy);
+    return;
+  }
   float face = j.active ? j.aim : std::atan2(g.fy, g.fx), fx = std::cos(face),
         fy = std::sin(face), rx = -fy, ry = fx;
   float prone = clamp(j.pose - 1, 0, 1), crouch = clamp(j.pose, 0, 1),

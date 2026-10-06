@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- **Layered character sprite atlas and animation system.** New bake pipeline
+  (`tools/charrig.py`, `tools/charparts.py`, `tools/build_character_atlas.py`)
+  produces `android/assets/characters.dwa`: 9810 sprites, 18 equipment layers,
+  16 animation clips, 5 baked directions (8 at runtime via mirroring), indexed
+  pixels with row-RLE so no image decoder is needed. Runtime loader and
+  palette blitter in `native/sprites.hpp`; animation state machine, palettes
+  and layer ordering in `native/char_anim.hpp`. Equipment changes are
+  reflected immediately; enemy types are separated by palette and silhouette.
+  The open-world player now renders from the atlas, falling back to the
+  previous procedural ranger if the asset is absent. New `characters` test
+  (65,774 assertions). See `docs/character-art/STATUS.md`.
+- `.github/workflows/apk.yml` builds an installable **disposable-test-signed**
+  APK artifact for on-device testing. It cannot update an installation signed
+  with the original release key - see `SIGNING.md`.
+- `dev-build.sh` host build helper for environments without root.
 - **Generator 6 "Earth relief"** for newly created worlds (`native/generation6.hpp`):
   continental elevation, ridged mountain chains gated by an orogenic belt mask,
   foothills, a treeline, walkable rock benches and downhill river drainage, with

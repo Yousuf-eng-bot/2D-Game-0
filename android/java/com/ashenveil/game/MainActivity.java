@@ -113,15 +113,20 @@ public final class MainActivity extends Activity {
     getWindow().getDecorView().setSystemUiVisibility(5894);
     // Native renderer reads a prepared RGB565 title image; no network or
     // decoder is needed.
-    try (java.io.InputStream in = getAssets().open("cover.bin");
-         java.io.OutputStream out =
-             new FileOutputStream(new File(getFilesDir(), "cover.bin"))) {
-      byte[] block = new byte[16384];
-      int count;
-      while ((count = in.read(block)) != -1)
-        out.write(block, 0, count);
-    } catch (Exception e) {
-      android.util.Log.w("DeathWorld", "Optional cover fallback", e);
+    // cover.bin is the prepared RGB565 title image; characters.dwa is the
+    // baked layered character atlas. Both are plain binary blobs, so no image
+    // decoder or network access is needed.
+    for (String asset : new String[] {"cover.bin", "characters.dwa"}) {
+      File target = new File(getFilesDir(), asset);
+      try (java.io.InputStream in = getAssets().open(asset);
+           java.io.OutputStream out = new FileOutputStream(target)) {
+        byte[] block = new byte[16384];
+        int count;
+        while ((count = in.read(block)) != -1)
+          out.write(block, 0, count);
+      } catch (Exception e) {
+        android.util.Log.w("DeathWorld", "Optional asset " + asset, e);
+      }
     }
     boot(getFilesDir().getAbsolutePath());
     game = new GameView();
