@@ -1116,7 +1116,9 @@ void uFront() {
     uButton(103, "How to play", 196, 253, 146, 46);
     uButton(642, "Classic", 390, 253, 107, 46);
     uButton(630, "Feedback", 507, 253, 107, 46);
-    uText(40, 326, "0.8 / CLEAR PLAY", UMUTED, 10);
+    // Build id, so a tester can tell two test APKs apart at a glance.
+    uText(40, 326, std::string("0.8 / CLEAR PLAY / BUILD ") + DW_BUILD_ID,
+          UMUTED, 10);
     return;
   }
   if (g.scene == WORLDS) {

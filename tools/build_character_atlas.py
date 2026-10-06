@@ -258,6 +258,9 @@ VARIANTS = [
     ("w_windbow",   "weapon",  P.weapon_bow),
     ("w_pick",      "weapon",  P.weapon_pick),
     ("w_sword",     "weapon",  P.weapon_sword),
+    ("w_sunsteel",  "weapon",  P.weapon_sunsteel),
+    ("acc_talisman", "accessory", P.accessory_talisman),
+    ("acc_cinder",  "accessory", P.accessory_cinder),
 ]
 
 

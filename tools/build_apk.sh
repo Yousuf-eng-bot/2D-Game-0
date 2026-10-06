@@ -23,6 +23,9 @@ JAR="${ANDROID_JAR:-$SDK_ROOT/platform/android-35/android.jar}"
 CXX="$NDK/toolchains/llvm/prebuilt/linux-x86_64/bin"
 BUILD="$ROOT/build/apk"
 DEST="${APK_OUTPUT:-$ROOT/Death-World-0.9.2-Thermal-Fix.apk}"
+# Short build identifier, compiled in and shown on the game's home screen so a
+# tester can confirm which build is actually installed.
+BUILD_ID="$(printf %.7s "${DW_BUILD_ID:-local}")"
 rm -rf "$BUILD/classes" "$BUILD/dex" "$BUILD/gen" "$BUILD/lib"
 mkdir -p "$BUILD/classes" "$BUILD/dex" "$BUILD/gen" "$(dirname "$KEY")"
 for ABI in arm64-v8a armeabi-v7a x86_64; do
@@ -33,7 +36,7 @@ for ABI in arm64-v8a armeabi-v7a x86_64; do
  esac
  echo "Compiling C++20 for $ABI..."
  mkdir -p "$BUILD/lib/$ABI"
- "$CXX/$COMPILER" -std=c++20 -O2 -fPIC -shared -static-libstdc++ -Wl,-z,max-page-size=16384 -Wl,-soname,libashen.so "$ROOT/native/engine.cpp" -lz -lEGL -lGLESv3 -landroid -o "$BUILD/lib/$ABI/libashen.so"
+ "$CXX/$COMPILER" -std=c++20 -O2 -DDW_BUILD_ID="\"$BUILD_ID\"" -fPIC -shared -static-libstdc++ -Wl,-z,max-page-size=16384 -Wl,-soname,libashen.so "$ROOT/native/engine.cpp" -lz -lEGL -lGLESv3 -landroid -o "$BUILD/lib/$ABI/libashen.so"
  "$CXX/llvm-strip" "$BUILD/lib/$ABI/libashen.so"
 done
 "$BT/aapt" package -f -M "$ROOT/android/AndroidManifest.xml" -S "$ROOT/android/res" -A "$ROOT/android/assets" -I "$JAR" -J "$BUILD/gen" -F "$BUILD/base.apk"

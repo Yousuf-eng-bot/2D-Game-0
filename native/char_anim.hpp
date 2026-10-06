@@ -132,7 +132,8 @@ struct CharIds {
   int coatRanger = -1, coatMail = -1, coatBandit = -1, coatElite = -1;
   int pack = -1, belt = -1;
   int wDawnblade = -1, wRiftaxe = -1, wRustaxe = -1, wWindbow = -1, wPick = -1,
-      wSword = -1;
+      wSword = -1, wSunsteel = -1;
+  int accTalisman = -1, accCinder = -1;
   int aIdle = -1, aIdleLook = -1, aIdleAdjust = -1, aIdleSword = -1;
   int aWalk = -1, aRun = -1, aAttack = -1, aStrong = -1, aChop = -1, aMine = -1;
   int aGuard = -1, aGuardHit = -1, aDodge = -1, aJump = -1, aHurt = -1,
@@ -163,6 +164,9 @@ void bindCharacterAtlas() {
   c.wWindbow = V("w_windbow");
   c.wPick = V("w_pick");
   c.wSword = V("w_sword");
+  c.wSunsteel = V("w_sunsteel");
+  c.accTalisman = V("acc_talisman");
+  c.accCinder = V("acc_cinder");
   c.aIdle = A("idle");
   c.aIdleLook = A("idle_look");
   c.aIdleAdjust = A("idle_adjust");
@@ -190,7 +194,7 @@ bool spriteCharactersReady() { return charAtlas.ready && charIds.ok; }
 // Layered composition
 // ---------------------------------------------------------------------------
 struct CharOutfit {
-  int coat = -1, headgear = -1, weapon = -1;
+  int coat = -1, headgear = -1, weapon = -1, accessory = -1;
   bool pack = false, belt = true, hair = true, armedSleeves = false;
 };
 
@@ -204,7 +208,10 @@ void drawCharActor(const CharOutfit &kit, const CharAnimState &st, float angle,
   int dir;
   bool mirror;
   charFacing(angle, dir, mirror);
-  bool facingAway = std::sin(angle) < 0.1f;
+  // The backpack only overdraws the torso on a genuine back view. On a side
+  // view it sits behind the body in world space, so drawing it on top would
+  // paste it across the character's belly.
+  bool facingAway = std::sin(angle) < -0.25f;
   auto L = [&](int v) {
     if (v >= 0)
       drawCharLayer(v, st.anim, dir, st.frame, mirror, px, py, pal, flash,
@@ -217,6 +224,8 @@ void drawCharActor(const CharOutfit &kit, const CharAnimState &st, float angle,
     L(kit.coat);
   if (kit.belt)
     L(charIds.belt);
+  if (kit.accessory >= 0)
+    L(kit.accessory);
   if (kit.pack && facingAway)
     L(charIds.pack);
   L(charIds.head);
@@ -287,13 +296,24 @@ CharOutfit playerOutfit() {
                          : charIds.coatRanger;
   k.armedSleeves = wearing && rarity >= 2;
   k.headgear = rarity >= 3 ? charIds.helm : rarity >= 2 ? charIds.hood : -1;
+  // Weapon slot: a rare core (Sunsteel) upgrades the blade in hand.
+  int coreRarity = -1;
+  for (auto &i : g.bag)
+    if (i.slot == 0 && i.id == g.eq[0])
+      coreRarity = i.rarity;
+  // Trinket slot: Cinder Heart glows, Faded Talisman does not.
+  for (auto &i : g.bag)
+    if (i.slot == 2 && i.id == g.eq[2])
+      k.accessory = i.value > 0 ? charIds.accCinder : charIds.accTalisman;
   // Hand weapon follows the current selection and the active tool action.
   if (j.toolAnim > 0)
     k.weapon = v.task == 2 ? charIds.wPick : charIds.wRustaxe;
+  else if (g.weapon == 1)
+    k.weapon = charIds.wRiftaxe;
+  else if (g.weapon == 2)
+    k.weapon = charIds.wWindbow;
   else
-    k.weapon = g.weapon == 1   ? charIds.wRiftaxe
-               : g.weapon == 2 ? charIds.wWindbow
-                               : charIds.wDawnblade;
+    k.weapon = coreRarity >= 2 ? charIds.wSunsteel : charIds.wDawnblade;
   k.pack = true;
   return k;
 }

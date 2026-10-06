@@ -59,8 +59,30 @@ def body(c: Canvas, sk: Skeleton, bare_arms: bool = True) -> None:
     hip_l = sk.pt(-2.8, p.lean * 0.3, 15 - 5 * p.crouch)
     hip_r = sk.pt(2.8, p.lean * 0.3, 15 - 5 * p.crouch)
     c.quad([sh_l, sh_r, hip_r, hip_l], CLOTH.base, 0.4)
-    c.quad([sh_l, sk.chest, hip_l], CLOTH.highlight, 0.45)
-    c.quad([sh_r, sk.chest, hip_r], CLOTH.shadow, 0.45)
+    # Light comes from the upper left, so the lit side follows the body axis
+    # rather than the screen: on a front view that is the character's right,
+    # on a back view it flips. Without this the torso reads as a flat card.
+    lit, dim = (-1.0, 1.0) if sk.fy >= 0 else (1.0, -1.0)
+    sh_lit = sk.shoulder_side(lit)
+    sh_dim = sk.shoulder_side(dim)
+    hip_lit = sk.pt(lit * 2.8, p.lean * 0.3, 15 - 5 * p.crouch)
+    hip_dim = sk.pt(dim * 2.8, p.lean * 0.3, 15 - 5 * p.crouch)
+    c.quad([sh_lit, sk.chest, hip_lit], CLOTH.highlight, 0.45)
+    c.quad([sh_dim, sk.chest, hip_dim], CLOTH.shadow, 0.45)
+    # Chest mass: a lit band across the pectorals and a shadow under the ribs,
+    # which is what makes a front-facing torso look round at this size.
+    if abs(sk.fy) > 0.2:
+        chest_y = 27 - 8 * p.crouch + p.breathe
+        band = sk.pt(0, p.lean * 0.7, chest_y)
+        c.disc(band[0], band[1], 3.4, 1.6,
+               CLOTH.highlight if sk.fy > 0 else CLOTH.shadow, 0.5)
+        under = sk.pt(0, p.lean * 0.5, chest_y - 3.4)
+        c.disc(under[0], under[1], 3.0, 1.2, CLOTH.shadow, 0.5)
+    # Collar, and a waist shadow where the torso meets the hips.
+    collar = sk.pt(0, p.lean, 32 - 10 * p.crouch + p.breathe)
+    c.disc(collar[0], collar[1], 2.6, 1.1, CLOTH.shadow, 0.55)
+    waist = sk.pt(0, p.lean * 0.3, 16 - 5 * p.crouch)
+    c.disc(waist[0], waist[1], 3.0, 1.0, CLOTH.shadow, 0.5)
 
     # neck
     c.capsule(sk.chest, sk.neck, 1.8, 1.5, SKIN, 0.5)
@@ -164,12 +186,16 @@ def coat_ranger(c: Canvas, sk: Skeleton) -> None:
 def coat_mail(c: Canvas, sk: Skeleton) -> None:
     sway = math.sin(sk.pose.leg * 1.4) * 1.1
     _coat_shell(c, sk, METAL, 7.5, sway)
-    # mail texture: stable dither keyed to pixel parity, so it cannot boil
+    # Mail texture. A full checkerboard reads as noise at 48 px, so the rings
+    # are drawn as offset horizontal courses instead: every other row, every
+    # other pixel, which still says "mail" but keeps the silhouette clean.
     ch = sk.chest
-    for j in range(-6, 7):
-        for i in range(-5, 6):
-            if (i + j) % 2 == 0:
-                c.put(ch[0] + i, ch[1] + j - 2, METAL.shadow, 0.78)
+    for j in range(-6, 7, 2):
+        for i in range(-5, 6, 2):
+            c.put(ch[0] + i + (j // 2) % 2, ch[1] + j - 2, METAL.shadow, 0.78)
+    # A lit course across the top of the chest so the plate still turns.
+    for i in range(-4, 5, 2):
+        c.put(ch[0] + i, ch[1] - 5, METAL.highlight, 0.79)
     sh_l, sh_r = sk.shoulder_side(-1.35), sk.shoulder_side(1.35)
     c.disc(sh_l[0], sh_l[1], 2.4, 1.9, ACCENT.base, 0.85)
     c.disc(sh_r[0], sh_r[1], 2.4, 1.9, ACCENT.shadow, 0.85)
@@ -299,3 +325,51 @@ def weapon_pick(c: Canvas, sk: Skeleton) -> None:
 
 def weapon_none(c: Canvas, sk: Skeleton) -> None:
     return
+
+
+# ---------------------------------------------------------------------------
+# Accessories. These hang off the belt, so they ride the hip joint and are
+# drawn after the belt but before the head.
+# ---------------------------------------------------------------------------
+
+def accessory_talisman(c: Canvas, sk: Skeleton) -> None:
+    """Faded Talisman: a plain bone charm on a cord at the off hip."""
+    p = sk.pose
+    top = sk.pt(4.6, 0.6, 15 - 5 * p.crouch)
+    low = sk.pt(5.2, 0.6, 11 - 4 * p.crouch)
+    z = sk.depth(1) + 0.4
+    c.capsule(top, low, 0.8, 0.7, LEATHER, z)
+    c.disc(low[0], low[1], 1.6, 1.8, SKIN.highlight, z + 0.1)
+    c.put(low[0], low[1], LEATHER.shadow, z + 0.2)
+
+
+def accessory_cinder(c: Canvas, sk: Skeleton) -> None:
+    """Cinder Heart: the same charm, but a glowing ember in a metal cage."""
+    p = sk.pose
+    top = sk.pt(4.6, 0.6, 15 - 5 * p.crouch)
+    low = sk.pt(5.2, 0.6, 10.6 - 4 * p.crouch)
+    z = sk.depth(1) + 0.4
+    c.capsule(top, low, 0.9, 0.8, METAL, z)
+    c.disc(low[0], low[1], 2.0, 2.2, METAL.shadow, z + 0.1)
+    c.disc(low[0], low[1], 1.2, 1.4, ACCENT.highlight, z + 0.2)
+    c.put(low[0], low[1] - 1, ACCENT.base, z + 0.3)
+
+
+def weapon_sunsteel(c: Canvas, sk: Skeleton) -> None:
+    """Sunsteel Core: a longer, gold-cored blade for the rare weapon slot."""
+    hand, dx, dy = _hand_frame(sk)
+    z = sk.depth(1) + 1.0
+    grip_end = (hand[0] - dx * 3.4, hand[1] - dy * 3.4)
+    c.capsule(grip_end, hand, 1.1, 1.0, LEATHER, z)
+    guard_a = (hand[0] + dy * 3.6, hand[1] - dx * 3.0)
+    guard_b = (hand[0] - dy * 3.6, hand[1] + dx * 3.0)
+    c.capsule(guard_a, guard_b, 1.0, 1.0, ACCENT, z + 0.1)
+    tip = (hand[0] + dx * 17.0, hand[1] + dy * 17.0)
+    mid = (hand[0] + dx * 8.0, hand[1] + dy * 8.0)
+    c.capsule(mid, tip, 1.9, 0.7, METAL, z + 0.2)
+    c.capsule(hand, mid, 2.1, 1.9, METAL, z + 0.2)
+    # Gold fuller running the length of the blade.
+    c.capsule((hand[0] + dx * 3.0, hand[1] + dy * 3.0),
+              (hand[0] + dx * 14.0, hand[1] + dy * 14.0),
+              0.7, 0.5, ACCENT, z + 0.3)
+    c.disc(grip_end[0], grip_end[1], 1.4, 1.4, ACCENT.base, z + 0.1)

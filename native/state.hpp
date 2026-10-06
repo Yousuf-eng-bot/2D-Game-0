@@ -10,6 +10,13 @@
 #include <queue>
 #include <set>
 namespace av {
+
+// Build identifier shown on the home screen. The release and CI builds pass
+// -DDW_BUILD_ID="<short sha>"; a plain local build says "dev".
+#ifndef DW_BUILD_ID
+#define DW_BUILD_ID "dev"
+#endif
+
 enum Scene {
   TITLE,
   HUB,

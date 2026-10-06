@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- **Equipment art completed.** New baked layers `w_sunsteel` (rare weapon
+  core), `acc_talisman` and `acc_cinder` on a new `accessory` slot, wired to
+  the trinket slot `g.eq[2]` and the weapon core rarity, so every equippable
+  item in the game now changes the character's appearance.
+- **Build identifier.** The home screen shows `BUILD <short sha>`
+  (`DW_BUILD_ID`, compiled in by `tools/build_apk.sh`), and the CI artifact is
+  named with the same sha, so a tester can confirm which build is installed.
+- `tools/export_source_manifest.py` re-exports `SOURCE-MANIFEST.json`;
+  `tools/check_source.py` passes again (252 files, 32 runtime WAVs).
+
+### Fixed
+- Character torsos read as flat cards: the lit side now follows the body axis
+  rather than the screen, with a pectoral band, rib shadow, collar and waist
+  shadow.
+- `coat_mail` used a full checkerboard that turned to noise at 48 px; it now
+  uses offset horizontal courses.
+- The backpack was drawn over the character's belly on side views, because
+  `facingAway` treated a pure side view as a back view.
+
+### Added
 - **Animal sprite atlas.** New rig and baker (`tools/animalrig.py`,
   `tools/build_animal_atlas.py`) produce `android/assets/animals.dwa`:
   2220 sprites, deer / rabbit / bird with two colour variants each, 10 clips

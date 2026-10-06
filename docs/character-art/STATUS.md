@@ -157,13 +157,35 @@ gold is measurably brighter than the bandit's trim.
 - All of this is presentation only: no simulation, AI, RNG, seed or save data
   is read differently or written.
 
+## Phase 3 - quality and equipment completion
+
+- **Torso form.** The flat left/right split is gone. The lit side now follows
+  the body axis instead of the screen, so it flips correctly on a back view,
+  and the chest gets a lit pectoral band, a rib shadow, a collar and a waist
+  shadow. A front-facing character no longer reads as a card.
+- **Mail readability.** `coat_mail` used a full checkerboard, which is noise
+  at 48 px. It now draws offset horizontal courses plus one lit course across
+  the chest.
+- **Backpack depth fix.** `facingAway` was `sin(angle) < 0.1`, which counted a
+  pure side view as "away" and pasted the pack across the character's belly.
+  It is now `< -0.25`, so only a genuine back view overdraws.
+- **Equipment coverage (1.1 closed).** Three new baked layers:
+  `w_sunsteel` (the rare weapon core now changes the blade in hand),
+  `acc_talisman` and `acc_cinder` on a new `accessory` slot, driven by the
+  trinket in `g.eq[2]`. Every equippable item in the game now has art, and
+  equipping still swaps the layer on the next frame.
+- **Build id.** The home screen now prints `BUILD <short sha>` next to the
+  version line, and the CI artifact is named with the same sha, so a tester
+  can always confirm which build is on the phone.
+- **`SOURCE-MANIFEST.json` re-exported** with the new
+  `tools/export_source_manifest.py`; `tools/check_source.py` passes again
+  (252 files, 32 WAVs).
+
 ## Still open
 
 - Art quality is a first pass. Proportions were corrected once after review,
   but the front-facing torso still reads flat and the sprites have not been
   hand-tuned pixel by pixel.
-- `SOURCE-MANIFEST.json` is still the 0.9.2 snapshot and therefore reports the
-  new files as changes. Re-export it at the next release-style commit.
 - Phone-side FPS has not been measured; the 60 FPS claim in the checklist is
   unverified on hardware.
 
