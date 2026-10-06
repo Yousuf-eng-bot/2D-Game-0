@@ -40,18 +40,28 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - uses: android-actions/setup-android@v3
-
-      - name: Install pinned SDK packages
-        run: |
-          sdkmanager --install "platforms;android-35" "build-tools;34.0.0" "ndk;27.2.12479018"
-
-      - name: Resolve toolchain paths
+      - name: Install Android SDK packages
         id: paths
         run: |
-          echo "ndk=$ANDROID_HOME/ndk/27.2.12479018" >> "$GITHUB_OUTPUT"
-          echo "bt=$ANDROID_HOME/build-tools/34.0.0" >> "$GITHUB_OUTPUT"
-          echo "jar=$ANDROID_HOME/platforms/android-35/android.jar" >> "$GITHUB_OUTPUT"
+          set -eux
+          SDK="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-$HOME/android-sdk}}"
+          SDKMAN="$(find "$SDK/cmdline-tools" -name sdkmanager -type f 2>/dev/null | head -1 || true)"
+          if [ -z "$SDKMAN" ]; then
+            mkdir -p "$SDK/cmdline-tools"
+            curl -sSLo /tmp/cmdline.zip \
+              https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+            unzip -q /tmp/cmdline.zip -d "$SDK/cmdline-tools"
+            mv "$SDK/cmdline-tools/cmdline-tools" "$SDK/cmdline-tools/latest"
+            SDKMAN="$SDK/cmdline-tools/latest/bin/sdkmanager"
+          fi
+          yes | "$SDKMAN" --sdk_root="$SDK" --licenses >/dev/null 2>&1 || true
+          "$SDKMAN" --sdk_root="$SDK" \
+            "platforms;android-35" "build-tools;34.0.0" "ndk;27.2.12479018"
+          NDK="$SDK/ndk/27.2.12479018"
+          [ -d "$NDK" ] || NDK="$(find "$SDK/ndk" -maxdepth 1 -mindepth 1 -type d | sort | tail -1)"
+          echo "ndk=$NDK" >> "$GITHUB_OUTPUT"
+          echo "bt=$SDK/build-tools/34.0.0" >> "$GITHUB_OUTPUT"
+          echo "jar=$SDK/platforms/android-35/android.jar" >> "$GITHUB_OUTPUT"
 
       - name: Build APK with a disposable test key
         env:
