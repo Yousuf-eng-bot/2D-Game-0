@@ -92,6 +92,9 @@ void drawLifeAnimal(const Animal &a) {
   int x = sx(a.x), y = syAt(a.x, a.y), d = a.dx < 0 ? -1 : 1, s = a.species;
   if (x < -50 || x > W + 50 || y < -30 || y > H + 55)
     return;
+  if (!a.alive && a.deadTime < 1.2f && a.meat > 0 &&
+      drawSpriteAnimal(a, x, y, surfaceNormals))
+    return;
   if (!a.alive) {
     if (a.meat <= 0) {
       line(x - 9, y - 2, x + 8, y - 2, 0xffd8cfab);
@@ -103,6 +106,8 @@ void drawLifeAnimal(const Animal &a) {
     }
     return;
   }
+  if (drawSpriteAnimal(a, x, y, surfaceNormals))
+    return;
   float wave = std::sin(a.step);
   int gait = int(wave * 3);
   bool low = a.behaviour == SLEEP || a.behaviour == DRINK ||

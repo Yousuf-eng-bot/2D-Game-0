@@ -486,6 +486,10 @@ void drawNewEnemy(const Enemy &e) {
   int x = sx(e.x), y = syAt(e.x, e.y);
   if (x < -90 || x > W + 90 || y < -30 || y > H + 140)
     return;
+  if (!e.alive && spriteCharactersReady() && e.death > 0 && e.kind != 2) {
+    drawSpriteEnemy(e, x, y, nullptr);
+    return;
+  }
   if (!e.alive) {
     ellipse(x, y - 3, e.boss() ? 28 : 14, 5, 0xff4c503e);
     line(x - 8, y - 5, x + 11, y - 3, 0xffb8b299);
@@ -514,6 +518,15 @@ void drawNewEnemy(const Enemy &e) {
     for (int j = 0; j < 4; j++)
       line(x - 8 + j * 5, y - 17, x - 10 + j * 5, y - 24, 0xffb0b29c);
     point(x + face * 18, y - 19, 0xffdfb779);
+    return;
+  }
+  if (spriteCharactersReady()) {
+    // Baked bandit art: grey/blue-metal palette and a hunched, shoulder-padded
+    // coat so enemies never read as the player at a distance.
+    for (int r = 0; r < 2; r++)
+      ellipse(x, y + 1, (e.boss() ? 19 : 13) - r * 3, 4 - r, 0xff343c33);
+    drawSpriteEnemy(e, x, y, nullptr);
+    drawEnemyBanner(e, x, y);
     return;
   }
   C skin = e.flash > 0 ? WHITE : 0xffa6a88b, dark = 0xff303b32;

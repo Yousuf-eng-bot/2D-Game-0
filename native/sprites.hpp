@@ -72,7 +72,20 @@ struct CharAtlas {
                size_t(d) * animFrames[a] + f;
     return i < index.size() ? &index[i] : nullptr;
   }
-} charAtlas;
+} charAtlas, animalAtlas;
+
+// Animals live in their own DWCA file: same container, different clip list.
+// `charSource` selects which one the blitter reads, so one code path serves
+// both and nothing about the character pipeline had to change.
+const CharAtlas *charSource = &charAtlas;
+
+struct CharSourceScope {
+  const CharAtlas *prev;
+  explicit CharSourceScope(const CharAtlas &a) : prev(charSource) {
+    charSource = &a;
+  }
+  ~CharSourceScope() { charSource = prev; }
+};
 
 namespace detail {
 inline bool rd(std::istream &f, void *p, size_t n) {
@@ -95,7 +108,7 @@ template <class T> inline T rdVal(std::istream &f) {
 }
 } // namespace detail
 
-bool loadCharacterAtlas(const std::string &file) {
+bool loadCharacterAtlas(const std::string &file, CharAtlas &target = charAtlas) {
   using namespace detail;
   CharAtlas a;
   std::ifstream f(file, std::ios::binary);
@@ -157,7 +170,7 @@ bool loadCharacterAtlas(const std::string &file) {
         r.oy + r.h > a.cellH)
       return false;
   a.ready = true;
-  charAtlas = std::move(a);
+  target = std::move(a);
   return true;
 }
 
@@ -171,37 +184,93 @@ inline void charFacing(float angle, int &dir, bool &mirror) {
   mirror = mir[s];
 }
 
+// Shade step of a palette index: -1 shadow, 0 base, +1 highlight. Used to
+// derive a normal for the Medium lighting pass without storing a normal map.
+inline int charShadeStep(int idx) {
+  if (idx <= CS_OUTLINE || idx == CS_FLASH)
+    return -2;
+  int k = (idx - CS_SKIN_S) % 3;
+  return k == 0 ? -1 : k == 1 ? 0 : 1;
+}
+
+// Scratch buffer for one decoded cell. Single threaded renderer, so one
+// static buffer is enough and avoids an allocation per layer per frame.
+static uint8_t charScratch[128 * 128];
+
 // Blit one layer. (px,py) is the anchor: centre of the feet, in screen pixels.
+// When `normals` is non-null a surface normal is written for every painted
+// pixel, so Medium keeps real normal lighting on characters.
 void drawCharLayer(int variant, int anim, int dir, int frame, bool mirror,
                    int px, int py, const CharPalette &pal, int flash = 0,
-                   int alpha = 255) {
-  const SpriteRect *r = charAtlas.at(variant, anim, dir, frame);
+                   int alpha = 255, C *normals = nullptr) {
+  const SpriteRect *r = charSource->at(variant, anim, dir, frame);
   if (!r || !r->w || alpha <= 0)
     return;
-  const uint8_t *d = charAtlas.blob.data() + r->off;
-  const uint8_t *end = d + r->len;
-  int baseX = px - charAtlas.anchorX, baseY = py - charAtlas.anchorY;
-  for (int row = 0; row < r->h; row++) {
-    int col = 0;
-    int y = baseY + r->oy + row;
-    while (col < r->w && d + 1 < end + 1 && d + 1 <= end - 1) {
-      int run = *d++, idx = *d++;
-      if (idx) {
-        C col32 = pal.c[idx];
-        if (flash > 0)
-          col32 = mix(col32, WHITE, std::min(255, flash));
-        for (int k = 0; k < run && col + k < r->w; k++) {
-          int cx = r->ox + col + k;
-          int x = baseX + (mirror ? (charAtlas.cellW - 1 - cx) : cx);
-          if (x < 0 || x >= W || y < 0 || y >= H)
-            continue;
-          if (alpha >= 255)
-            pix[y * W + x] = col32;
-          else
-            pix[y * W + x] = mix(pix[y * W + x], col32, alpha);
-        }
+  const int sw = r->w, sh = r->h;
+  if (sw * sh > int(sizeof(charScratch)))
+    return;
+  // Decode the trimmed RLE rows into the scratch cell.
+  std::memset(charScratch, 0, size_t(sw) * sh);
+  {
+    const uint8_t *d = charSource->blob.data() + r->off;
+    const uint8_t *end = d + r->len;
+    for (int row = 0; row < sh; row++) {
+      int col = 0;
+      while (col < sw && d + 1 < end) {
+        int run = *d++, idx = *d++;
+        for (int k = 0; k < run && col + k < sw; k++)
+          charScratch[row * sw + col + k] = uint8_t(idx);
+        col += run;
       }
-      col += run;
+    }
+  }
+  auto filled = [&](int x, int y) {
+    return x >= 0 && y >= 0 && x < sw && y < sh && charScratch[y * sw + x];
+  };
+  int baseX = px - charSource->anchorX, baseY = py - charSource->anchorY;
+  for (int row = 0; row < sh; row++) {
+    int y = baseY + r->oy + row;
+    if (y < 0 || y >= H)
+      continue;
+    for (int col = 0; col < sw; col++) {
+      int idx = charScratch[row * sw + col];
+      if (!idx)
+        continue;
+      int cx = r->ox + col;
+      int x = baseX + (mirror ? (charSource->cellW - 1 - cx) : cx);
+      if (x < 0 || x >= W)
+        continue;
+      C c = pal.c[idx];
+      if (flash > 0)
+        c = mix(c, WHITE, std::min(255, flash));
+      pix[y * W + x] = alpha >= 255 ? c : mix(pix[y * W + x], c, alpha);
+      if (!normals)
+        continue;
+      // Normal from the silhouette bevel plus the material shade step: edges
+      // tilt outward, highlights tilt toward the light, shadows away.
+      int nx = 0, ny = 0;
+      if (!filled(col - 1, row))
+        nx -= 48;
+      if (!filled(col + 1, row))
+        nx += 48;
+      if (!filled(col, row - 1))
+        ny -= 48;
+      if (!filled(col, row + 1))
+        ny += 48;
+      int step = charShadeStep(idx);
+      if (step == 1) {
+        nx -= 26;
+        ny -= 30;
+      } else if (step == -1) {
+        nx += 20;
+        ny += 24;
+      }
+      if (mirror)
+        nx = -nx;
+      C n = (uint32_t(std::clamp(128 + nx, 0, 255)) << 16) |
+            (uint32_t(std::clamp(128 + ny, 0, 255)) << 8) | 236u;
+      normals[y * W + x] =
+          alpha >= 255 ? n : (mix(normals[y * W + x], n, alpha) & 0xffffff);
     }
   }
 }

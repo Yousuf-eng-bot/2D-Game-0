@@ -124,18 +124,48 @@ gold is measurably brighter than the bandit's trim.
 - **Enemies and animals still use the old procedural renderers.** The palettes,
   bandit/elite coats and the whole atlas are in place for them, but
   `enemyArt` / `animalArt` are not yet wired to `drawCharActor`. Points 1.2
-  (partially: assets exist, wiring does not), 1.4 and 2.6 are therefore
-  **not delivered in the game yet**.
-- The Medium renderer (`drawMediumPlayer`) still draws its own player. Only the
-  Low / open-world ranger path uses the atlas so far.
-- Hit-reaction knockback and the attacker's lunge/squash (2.4) are only
-  partially present: the white/red flash is wired through the sprite blitter,
-  but the existing knockback is the old combat-side impulse, not a new
-  animation-driven one.
-- Dust frames for dodge start/end and landing (2.5) are not drawn.
+  (assets exist, wiring does not) - **now closed by phase 2 below.**
+
+## Phase 2 - what the second pass added
+
+- **One character on both quality tiers.** `drawMediumPlayer` no longer draws
+  its own procedural actor; it calls the same `drawCharActor` as the Low /
+  open-world path. The reported "the character looks different on Medium" bug
+  is this change. Medium keeps its own extras on top: dash echo trail, contact
+  shadows, weapon strike arcs, counter ring and landing dust.
+- **Normals for Medium.** `drawCharLayer` now optionally writes a surface
+  normal per painted pixel (`0x00RRGGBB`, R = nx+128, G = ny+128, B = nz),
+  derived from the silhouette bevel plus the material shade step, so GLES
+  lighting still lights characters correctly.
+- **Enemies (1.2).** `enemyOutfit` / `enemyPalette` plus a per-entity
+  animation cache, wired into both `drawNewEnemy` (Low) and `drawMediumEnemy`
+  (Medium). Common bandits use the cold grey-blue `PAL_BANDIT`, elites and
+  bosses the near-black `PAL_ELITE` with bright gold trim, a steel helm and a
+  shoulder-padded coat - a different silhouette, not just a recolour.
+- **Animals (1.4, 2.6).** A new rig (`tools/animalrig.py`) and atlas
+  (`tools/build_animal_atlas.py` -> `android/assets/animals.dwa`,
+  2,220 sprites, 6 variants, 10 clips, 5 directions). Deer, rabbit and bird,
+  two colour variants each. Clips: deer grazing loop with an occasional head
+  lift every 6-10 s, rabbit hop with real squash-and-stretch, bird ground
+  peck plus a take-off `flee`. Species without baked art keep their original
+  procedural drawing untouched.
+- **Hit reaction (2.4).** `charKnockback` gives a 4-6 px directional shove on
+  the hurt frames, and `updateHitLunge` / `charLunge` give the attacker a
+  short forward lunge when a hit actually lands (read from `j.struck`).
+- **Dust (2.5).** `drawActorDust` draws stepped puffs for the landing ring and
+  the roll trail, on both tiers.
+- All of this is presentation only: no simulation, AI, RNG, seed or save data
+  is read differently or written.
+
+## Still open
+
 - Art quality is a first pass. Proportions were corrected once after review,
   but the front-facing torso still reads flat and the sprites have not been
   hand-tuned pixel by pixel.
+- `SOURCE-MANIFEST.json` is still the 0.9.2 snapshot and therefore reports the
+  new files as changes. Re-export it at the next release-style commit.
+- Phone-side FPS has not been measured; the 60 FPS claim in the checklist is
+  unverified on hardware.
 
 ## Test APK
 

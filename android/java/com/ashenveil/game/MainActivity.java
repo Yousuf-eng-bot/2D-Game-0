@@ -116,7 +116,7 @@ public final class MainActivity extends Activity {
     // cover.bin is the prepared RGB565 title image; characters.dwa is the
     // baked layered character atlas. Both are plain binary blobs, so no image
     // decoder or network access is needed.
-    for (String asset : new String[] {"cover.bin", "characters.dwa"}) {
+    for (String asset : new String[] {"cover.bin", "characters.dwa", "animals.dwa"}) {
       File target = new File(getFilesDir(), asset);
       try (java.io.InputStream in = getAssets().open(asset);
            java.io.OutputStream out = new FileOutputStream(target)) {

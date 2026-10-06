@@ -189,6 +189,135 @@ int main() {
   g.weapon = 0;
   CHECK(playerOutfit().weapon == charIds.wDawnblade);
 
+  // ---- animal atlas ------------------------------------------------------
+  auto animalAsset = std::filesystem::path(__FILE__).parent_path()
+                         .parent_path() / "android/assets/animals.dwa";
+  CHECK(std::filesystem::exists(animalAsset));
+  CHECK(loadCharacterAtlas(animalAsset.string(), animalAtlas));
+  resolveAnimalIds();
+  CHECK(spriteAnimalsReady());
+  CHECK(animalAtlas.cellW == charAtlas.cellW);
+  CHECK(animalAtlas.cellH == charAtlas.cellH);
+  CHECK(animalAtlas.anchorX == charAtlas.anchorX);
+  CHECK(animalAtlas.anchorY == charAtlas.anchorY);
+  CHECK(animalAtlas.dirs == 5);
+  const char *needAnimals[] = {"deer_doe",     "deer_buck",   "rabbit_grey",
+                               "rabbit_brown", "bird_drab",   "bird_blue"};
+  for (const char *n : needAnimals)
+    CHECK(animalAtlas.variant(n) >= 0);
+  // Spec 2.7: no animal clip may be shorter than six frames.
+  for (size_t a = 0; a < animalAtlas.animName.size(); a++)
+    CHECK(animalAtlas.animFrames[a] >= 6);
+  const char *needAnimalAnims[] = {"idle", "graze", "head_lift", "walk",
+                                   "run",  "hop",   "peck",      "flee",
+                                   "hurt", "die"};
+  for (const char *n : needAnimalAnims)
+    CHECK(animalAtlas.anim(n) >= 0);
+  // Every animal cell must exist and stay inside the shared cell.
+  {
+    CharSourceScope scope(animalAtlas);
+    for (int v = 0; v < int(animalAtlas.variantName.size()); v++)
+      for (int a = 0; a < int(animalAtlas.animName.size()); a++)
+        for (int d = 0; d < animalAtlas.dirs; d++)
+          for (int f = 0; f < animalAtlas.animFrames[a]; f++) {
+            const SpriteRect *r = animalAtlas.at(v, a, d, f);
+            CHECK(r != nullptr);
+            CHECK(r->w > 0 && r->h > 0);
+            CHECK(r->ox + r->w <= animalAtlas.cellW);
+            CHECK(r->oy + r->h <= animalAtlas.cellH);
+          }
+  }
+  // Species routing and behaviour selection.
+  {
+    Animal a{};
+    a.species = DEER;
+    a.id = 2;
+    a.alive = true;
+    CHECK(animalVariantFor(a) == animalIds.deerDoe);
+    a.id = 3;
+    CHECK(animalVariantFor(a) == animalIds.deerBuck);
+    a.behaviour = GRAZE;
+    int clip = chooseAnimalAnim(a, 0.f);
+    CHECK(clip == animalIds.aGraze || clip == animalIds.aHeadLift);
+    CHECK(chooseAnimalAnim(a, 1.f) == animalIds.aRun);
+    a.species = HARE;
+    CHECK(animalIsRabbit(a));
+    CHECK(chooseAnimalAnim(a, .5f) == animalIds.aHop);
+    a.species = RAVEN;
+    CHECK(animalIsBird(a));
+    a.behaviour = WANDER;
+    CHECK(chooseAnimalAnim(a, 0.f) == animalIds.aPeck);
+    a.behaviour = FLEE;
+    CHECK(chooseAnimalAnim(a, 0.f) == animalIds.aFlee);
+    a.species = WOLF; // not baked: keeps its original procedural art
+    CHECK(animalVariantFor(a) < 0);
+    CHECK(!drawSpriteAnimal(a, W / 2, H / 2, nullptr));
+    // The blitter must restore the character atlas after an animal draw.
+    a.species = DEER;
+    a.alive = true;
+    a.flash = 0;
+    CHECK(drawSpriteAnimal(a, W / 2, H / 2, nullptr));
+    CHECK(charSource == &charAtlas);
+  }
+
+  // ---- enemies read as enemies ------------------------------------------
+  {
+    Enemy e{};
+    e.entityId = 7;
+    e.alive = true;
+    e.hp = e.maxhp = 10;
+    e.kind = 0;
+    CharOutfit grunt = enemyOutfit(e);
+    CHECK(grunt.coat == charIds.coatBandit);
+    CHECK(!grunt.pack); // the backpack is a player silhouette cue
+    e.elite = true;
+    CharOutfit elite = enemyOutfit(e);
+    CHECK(elite.coat == charIds.coatElite);
+    CHECK(elite.headgear == charIds.helm);
+    CHECK(&enemyPalette(e) == &PAL_ELITE);
+    e.elite = false;
+    CHECK(&enemyPalette(e) == &PAL_BANDIT);
+    // Player and enemy palettes must differ in the cloth ramp, which is what
+    // makes them separable at a distance.
+    for (int i = CS_CLOTH_S; i <= CS_CLOTH_H; i++)
+      CHECK(PAL_PLAYER.c[i] != PAL_BANDIT.c[i]);
+    e.stun = .2f;
+    CHECK(chooseEnemyAnim(e) == charIds.aHurt);
+    e.stun = 0;
+    e.wind = .2f;
+    e.windMax = .3f;
+    CHECK(chooseEnemyAnim(e) == charIds.aAttack);
+    e.wind = 0;
+    e.alive = false;
+    CHECK(chooseEnemyAnim(e) == charIds.aDie);
+  }
+
+  // ---- hit reaction, lunge and knockback --------------------------------
+  {
+    int x = 100, y = 100;
+    g.hurtTime = 0;
+    charKnockback(g.hurtTime, 1, 0, x, y);
+    CHECK(x == 100 && y == 100); // no hit, no shove
+    charKnockback(.28f, 1, 0, x, y);
+    CHECK(x > 100 && x - 100 <= 6); // spec 2.4: 4-6 px directional knockback
+    playerLunge = 0;
+    j.active = true;
+    j.heavy = false;
+    j.struck.clear();
+    playerStruckSeen = 0;
+    updateHitLunge(.016f);
+    CHECK(playerLunge == 0.f);
+    j.struck.insert(1);
+    updateHitLunge(.016f);
+    CHECK(playerLunge > 0.f); // landing a hit lunges
+    int lx = 50, ly = 50;
+    charLunge(0.f, lx, ly);
+    CHECK(lx > 50);
+    playerLunge = 0;
+    j.struck.clear();
+    j.active = false;
+  }
+
   // ---- a missing atlas falls back instead of crashing --------------------
   CHECK(!loadCharacterAtlas((root / "no-such-file.dwa").string()));
   CHECK(spriteCharactersReady()); // previous atlas still valid

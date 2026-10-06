@@ -11,8 +11,12 @@ void drawJourneyRanger(int x, int y, float phase, bool moving) {
     int flash = g.hurtTime > 0 ? int(std::min(1.f, g.hurtTime / .22f) * 190) : 0;
     if (g.hurtTime > 0 && int(g.time * 28) % 2 == 0)
       flash = std::min(255, flash + 60);
-    drawCharActor(playerOutfit(), playerAnim, a, x, fy, PAL_PLAYER, flash);
-    drawBodyMarks(x, fy);
+    int kx = x, ky = fy;
+    charKnockback(g.hurtTime, g.hurtx, g.hurty, kx, ky);
+    charLunge(a, kx, ky);
+    drawCharActor(playerOutfit(), playerAnim, a, kx, ky, PAL_PLAYER, flash);
+    drawBodyMarks(kx, ky);
+    drawActorDust(x, y, a);
     return;
   }
   float face = j.active ? j.aim : std::atan2(g.fy, g.fx), fx = std::cos(face),

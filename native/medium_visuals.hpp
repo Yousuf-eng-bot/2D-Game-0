@@ -160,6 +160,37 @@ int mediumDirection(float angle){return (int(std::round(angle/(PI/4)))+16)%8;}
 float mediumPlayerDeath=0;
 void drawMediumPlayer(int x,int y,float phase,bool moving) {
   float facing=j.active?j.aim:std::atan2(g.fy,g.fx);
+  if(j.toolAnim>0)facing=j.toolAim;
+  // Medium and Low now share one baked character, so the player looks and
+  // animates identically on both quality tiers. Medium adds its own extras:
+  // real normal lighting, the dash echo trail, swing arcs and landing dust.
+  if(spriteCharactersReady()){
+    if(g.hp<=0)mediumPlayerDeath+=renderDt;else mediumPlayerDeath=0;
+    for(int r=0;r<3;r++)ellipse(x,y+2,15-r*2,4-r,0xff2c3733);
+    int flash=g.hurtTime>0?int(std::min(1.f,g.hurtTime/.22f)*190):0;
+    if(g.hurtTime>0&&int(g.time*28)%2==0)flash=std::min(255,flash+60);
+    int alpha=g.hp<=0?std::max(90,255-int(mediumPlayerDeath*65)):255;
+    CharOutfit kit=playerOutfit();
+    int fy=y-int(j.z);
+    if(g.dash>0)for(int k=3;k>=1;k--)
+      drawCharActor(kit,playerAnim,facing,x-int(g.fx*k*7),fy-int(g.fy*k*5),
+                    PAL_PLAYER,0,35+k*12,nullptr);
+    int kx=x,ky=fy;charKnockback(g.hurtTime,g.hurtx,g.hurty,kx,ky);charLunge(facing,kx,ky);
+    drawCharActor(kit,playerAnim,facing,kx,ky,PAL_PLAYER,flash,alpha,
+                  surfaceNormals);
+    if(g.hp<=0)return;
+    int hx=x+(std::cos(facing)>=0?13:-13),hy=fy-26;
+    if(j.counter>0)arc(x,fy-31,27,-PI*.9f,PI*.1f,0xffe6d39b,2);
+    if(j.active && j.elapsed>=j.windup && j.elapsed<j.windup+j.activeTime){
+      float weaponAngle=strikeAngle(j.elapsed);
+      int rr=g.weapon==AXE?42:37;
+      arc(hx,hy,rr,weaponAngle-.75f,weaponAngle,0xfff0cf92,2);
+      arc(hx,hy,rr-3,weaponAngle-.5f,weaponAngle,0xffa4bdb0,1);
+      if(j.heavy)ring(g.px,g.py,int(20+50*clamp((j.elapsed-j.windup)/std::max(.01f,j.activeTime),0,1)),0xffcfb87c);
+    }
+    drawActorDust(x,y,facing);
+    return;
+  }
   int clip= moving ? (len(g.vx,g.vy)>95 ? MRUN:MWALK):MIDLE;
   int frame=moving?(int(phase/10.88f*8)%8+8)%8:int(g.time*6)%8;
   if(j.stance==1)clip=MCROUCH;
@@ -196,6 +227,13 @@ void drawMediumEnemy(const Enemy &e) {
   int x=sx(e.x),y=syAt(e.x,e.y);
   if(x<-95||x>W+95||y<-10||y>H+110)return;
   if(!e.alive && e.death<=0)return;
+  if(spriteCharactersReady()){
+    for(int r=0;r<3;r++)ellipse(x,y+2,(e.boss()?21:15)-r*2,4-r,0xff2b3633);
+    drawSpriteEnemy(e,x,y,surfaceNormals);
+    if(e.kind==4){circle(x+20,y-57,3,0xffc99472,true);if(surfaceNormals)for(int dy=-2;dy<=2;dy++)for(int dx=-2;dx<=2;dx++){int xx=x+20+dx,yy=y-57+dy;if(xx>=0&&xx<W&&yy>=0&&yy<H)surfaceNormals[yy*W+xx]=0xb08080ff;}}
+    drawEnemyBanner(e,x,y);
+    return;
+  }
   int role=e.boss()?7:e.elite?6:e.kind==3?3:e.kind==1?4:e.kind==4?5:(e.entityId%3==1?2:1);
   float angle=e.alertTime>0?std::atan2(g.py-e.y,g.px-e.x):std::atan2(e.y-e.previousY,e.x-e.previousX);
   bool moving=std::hypot(e.x-e.previousX,e.y-e.previousY)>.03f;

@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- **Animal sprite atlas.** New rig and baker (`tools/animalrig.py`,
+  `tools/build_animal_atlas.py`) produce `android/assets/animals.dwa`:
+  2220 sprites, deer / rabbit / bird with two colour variants each, 10 clips
+  (idle, graze, head_lift, walk, run, hop, peck, flee, hurt, die) across the
+  same 5 baked directions, same 48x48 cell and same feet anchor as the
+  character atlas. Wired into `drawLifeAnimal`; species without baked art keep
+  their original procedural drawing.
+- **Impact feedback.** `charKnockback` (4-6 px directional shove while hurt),
+  `updateHitLunge`/`charLunge` (forward lunge when a hit lands) and
+  `drawActorDust` (landing ring and roll dust), all presentation only.
+
+### Changed
+- **Medium now draws the same character as Low.** `drawMediumPlayer` and
+  `drawMediumEnemy` render from the character atlas instead of the procedural
+  CPU sprite cache, so the player and enemies look and animate identically on
+  both quality tiers. Medium keeps its dash trail, strike arcs, counter ring
+  and contact shadows.
+- `drawCharLayer` can write per-pixel surface normals, so characters keep real
+  normal lighting in the Medium GLES pass.
+- Enemies use dedicated outfits and palettes (`PAL_BANDIT` cold grey-blue,
+  `PAL_ELITE` near-black with gold trim, steel helm, shoulder-padded coat) in
+  both renderers, making them readable against the player at a distance.
+
+### Added
 - **Layered character sprite atlas and animation system.** New bake pipeline
   (`tools/charrig.py`, `tools/charparts.py`, `tools/build_character_atlas.py`)
   produces `android/assets/characters.dwa`: 9810 sprites, 18 equipment layers,

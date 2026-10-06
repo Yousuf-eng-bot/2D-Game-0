@@ -267,7 +267,10 @@ void boot(const std::string &path) {
     loadArtwork(path + "/cover.bin");
     if (!loadCharacterAtlas(path + "/characters.dwa"))
       loadCharacterAtlas("android/assets/characters.dwa");
+    if (!loadCharacterAtlas(path + "/animals.dwa", animalAtlas))
+      loadCharacterAtlas("android/assets/animals.dwa", animalAtlas);
     bindCharacterAtlas();
+    resolveAnimalIds();
   }
   loadSettings();
   ui7Boot();
