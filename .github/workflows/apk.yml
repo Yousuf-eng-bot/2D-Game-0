@@ -16,6 +16,11 @@ name: Test APK
 #   SIGNING_KEY=/private/path/ashen-prototype.jks bash tools/build_apk.sh
 
 on:
+  # Runs on the Arena working branch so the owner always has a fresh test APK
+  # to download from the run's artifacts, and manually from any branch once
+  # this workflow reaches the default branch.
+  push:
+    branches: ["arena/**"]
   workflow_dispatch:
     inputs:
       output_name:
@@ -55,17 +60,17 @@ jobs:
           ANDROID_JAR: ${{ steps.paths.outputs.jar }}
           ALLOW_NEW_SIGNING_KEY: "1"
           SIGNING_KEY: ${{ runner.temp }}/disposable-test.jks
-          APK_OUTPUT: ${{ github.workspace }}/${{ inputs.output_name }}
+          APK_OUTPUT: ${{ github.workspace }}/${{ inputs.output_name || 'Death-World-Test.apk' }}
         run: bash tools/build_apk.sh
 
       - name: Report artifact identity
         run: |
-          ls -l "${{ inputs.output_name }}"
-          sha256sum "${{ inputs.output_name }}"
+          ls -l "${{ inputs.output_name || 'Death-World-Test.apk' }}"
+          sha256sum "${{ inputs.output_name || 'Death-World-Test.apk' }}"
 
       - uses: actions/upload-artifact@v4
         with:
           name: death-world-test-apk
-          path: ${{ inputs.output_name }}
+          path: ${{ inputs.output_name || 'Death-World-Test.apk' }}
           if-no-files-found: error
           retention-days: 14
