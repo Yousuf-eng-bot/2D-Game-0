@@ -181,11 +181,44 @@ gold is measurably brighter than the bandit's trim.
   `tools/export_source_manifest.py`; `tools/check_source.py` passes again
   (252 files, 32 WAVs).
 
+## Phase 4 - the hero redesign
+
+The owner asked for a main character modelled on the Diablo Immortal
+reference shots: long flowing hair, heavy ornate armour, spiked pauldrons, a
+cape, and a dangerous blood-stained weapon, at much higher detail.
+
+- **A dedicated hero rig.** `tools/herorig.py` + `tools/heroparts.py` bake
+  `android/assets/hero.dwa` on an **80x96 cell with a ~62 px figure** - about
+  three times the pixel area of the shared 48x48 actor. The whole game still
+  renders at its fixed 640x360 logical resolution (UI layout and save data
+  depend on it), so "higher resolution" here means far more pixels spent on
+  the character, not a different framebuffer.
+- **Long hair** is its own layer: a skull cap, face-framing wisps and four
+  trailing locks that swing with the stride and lag a step behind it. Locks
+  are kept clear of the face and sit behind it on front views, in front of it
+  on back views.
+- **Armour.** `armor_plate` is a filigreed cuirass with a gold chest cross, a
+  fauld of tassets, and `pauldrons` adds spiked shoulder plates that dominate
+  the silhouette. `cape` is a five-panel cape with folds, a gold hem and
+  billow driven by stride and jump height.
+- **Headgear.** The crown is a horned **circlet**, not a closed helm, so the
+  long hair stays visible with it on.
+- **Weapons.** A new blood ramp (palette slots 24-26) and `_blood_on()` put
+  deterministic dried gore and a drip along the greatsword and the war axe.
+  The blade is fullered, with swept quillons and a gold core.
+- **Wiring.** The hero file is a third `CharAtlas`; `drawCharActor(..., hero)`
+  switches atlas and id table, so Low and Medium both draw the same hero and
+  every existing animation clip works unchanged.
+
 ## Still open
 
 - Art quality is a first pass. Proportions were corrected once after review,
   but the front-facing torso still reads flat and the sprites have not been
   hand-tuned pixel by pixel.
+- The hero's **animation pass has not been done yet** - he currently reuses
+  the shared 16 clips. The owner asked to review the design first.
+- Trees look small next to the new hero, and a jump can clear some of them.
+  Reported by the owner; not addressed yet.
 - Phone-side FPS has not been measured; the 60 FPS claim in the checklist is
   unverified on hardware.
 

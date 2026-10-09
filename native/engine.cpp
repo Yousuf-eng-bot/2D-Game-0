@@ -269,7 +269,10 @@ void boot(const std::string &path) {
       loadCharacterAtlas("android/assets/characters.dwa");
     if (!loadCharacterAtlas(path + "/animals.dwa", animalAtlas))
       loadCharacterAtlas("android/assets/animals.dwa", animalAtlas);
+    if (!loadCharacterAtlas(path + "/hero.dwa", heroAtlas))
+      loadCharacterAtlas("android/assets/hero.dwa", heroAtlas);
     bindCharacterAtlas();
+    bindHeroAtlas();
     resolveAnimalIds();
   }
   loadSettings();

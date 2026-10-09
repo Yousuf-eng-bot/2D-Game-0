@@ -22,6 +22,7 @@ constexpr CharPalette PAL_PLAYER = {{
     0xff2c221e, 0xff4a382e, 0xff6e5642,            // hair
     0xff5a4634, 0xff8a6e52, 0xffb69c7a,            // fur
     0xffffffff,
+    0xff5a1014, 0xff8e1c1c, 0xffc63a30,            // blood
 }};
 
 // Common bandit: cold grey, no trim. Reads as "not the player" at a glance.
@@ -35,6 +36,7 @@ constexpr CharPalette PAL_BANDIT = {{
     0xff1e1c1a, 0xff34302c, 0xff504a42,
     0xff4a4038, 0xff6e6256, 0xff928476,
     0xffffffff,
+    0xff4a1012, 0xff781818, 0xffa83028,            // blood
 }};
 
 // Elite: darker body, bright gold edge so it separates from common bandits.
@@ -48,6 +50,7 @@ constexpr CharPalette PAL_ELITE = {{
     0xff161418, 0xff282428, 0xff403a3c,
     0xff3e3630, 0xff5e5248, 0xff807060,
     0xffffffff,
+    0xff50080c, 0xff860e12, 0xffc0241e,            // blood
 }};
 
 
@@ -64,6 +67,7 @@ constexpr CharPalette PAL_ANIMAL_DEER = {{
     0xff2a2018, 0xff423226, 0xff5e4836,
     0xff6b4f33, 0xff9a7450, 0xffc8a074,            // fur: warm deer brown
     0xffffffff,
+    0xff5a1014, 0xff8e1c1c, 0xffc63a30,            // blood
 }};
 
 constexpr CharPalette PAL_ANIMAL_HARE = {{
@@ -76,6 +80,7 @@ constexpr CharPalette PAL_ANIMAL_HARE = {{
     0xff2a2824, 0xff423e38, 0xff5c564e,
     0xff6e6a60, 0xff9c968a, 0xffcac4b6,            // fur: soft grey
     0xffffffff,
+    0xff5a1014, 0xff8e1c1c, 0xffc63a30,            // blood
 }};
 
 constexpr CharPalette PAL_ANIMAL_BIRD = {{
@@ -88,6 +93,7 @@ constexpr CharPalette PAL_ANIMAL_BIRD = {{
     0xff16161a, 0xff2a2a30, 0xff404048,
     0xff33332f, 0xff4e4e48, 0xff6e6e66,            // fur slot: drab plumage
     0xffffffff,
+    0xff5a1014, 0xff8e1c1c, 0xffc63a30,            // blood
 }};
 
 // ---------------------------------------------------------------------------
@@ -191,20 +197,89 @@ void bindCharacterAtlas() {
 bool spriteCharactersReady() { return charAtlas.ready && charIds.ok; }
 
 // ---------------------------------------------------------------------------
+// Hero atlas
+//
+// The player is the one actor on screen at all times, so he is baked from a
+// larger rig (80x96 cell, ~62 px figure) into his own file. Layer names match
+// the shared atlas, plus two the hero alone has: spiked pauldrons and a cape.
+// ---------------------------------------------------------------------------
+CharIds heroIds;
+int heroPauldrons = -1, heroCape = -1;
+
+void bindHeroAtlas() {
+  CharIds c;
+  if (!heroAtlas.ready)
+    return;
+  auto V = [&](const char *n) { return heroAtlas.variant(n); };
+  auto A = [&](const char *n) { return heroAtlas.anim(n); };
+  c.body = V("body");
+  c.bodyArmed = V("body_armed");
+  c.head = V("head");
+  c.hair = V("hair");
+  c.hood = V("hood");
+  c.helm = V("helm_steel");
+  c.coatRanger = V("coat_ranger");
+  c.coatMail = V("coat_mail");
+  c.coatBandit = V("coat_bandit");
+  c.coatElite = V("coat_elite");
+  c.pack = V("pack");
+  c.belt = V("belt");
+  c.wDawnblade = V("w_dawnblade");
+  c.wRiftaxe = V("w_riftaxe");
+  c.wRustaxe = V("w_rustaxe");
+  c.wWindbow = V("w_windbow");
+  c.wPick = V("w_pick");
+  c.wSword = V("w_sword");
+  c.wSunsteel = V("w_sunsteel");
+  c.accTalisman = V("acc_talisman");
+  c.accCinder = V("acc_cinder");
+  c.aIdle = A("idle");
+  c.aIdleLook = A("idle_look");
+  c.aIdleAdjust = A("idle_adjust");
+  c.aIdleSword = A("idle_sword");
+  c.aWalk = A("walk");
+  c.aRun = A("run");
+  c.aAttack = A("attack");
+  c.aStrong = A("strong");
+  c.aChop = A("chop");
+  c.aMine = A("mine");
+  c.aGuard = A("guard");
+  c.aGuardHit = A("guard_hit");
+  c.aDodge = A("dodge");
+  c.aJump = A("jump");
+  c.aHurt = A("hurt");
+  c.aDie = A("die");
+  c.ok = c.body >= 0 && c.head >= 0 && c.aIdle >= 0 && c.aWalk >= 0 &&
+         c.aAttack >= 0;
+  heroIds = c;
+  heroPauldrons = V("pauldrons");
+  heroCape = V("cape");
+}
+
+bool spriteHeroReady() { return heroAtlas.ready && heroIds.ok; }
+
+
+// ---------------------------------------------------------------------------
 // Layered composition
 // ---------------------------------------------------------------------------
 struct CharOutfit {
   int coat = -1, headgear = -1, weapon = -1, accessory = -1;
   bool pack = false, belt = true, hair = true, armedSleeves = false;
+  // Hero-only layers. Ignored by actors drawn from the shared atlas.
+  bool pauldrons = false, cape = false;
 };
 
 // Draw order matters: the backpack is behind the torso when the actor faces
 // the camera and in front of it when walking away.
 void drawCharActor(const CharOutfit &kit, const CharAnimState &st, float angle,
                    int px, int py, const CharPalette &pal, int flash = 0,
-                   int alpha = 255, C *normals = nullptr) {
-  if (!spriteCharactersReady() || st.anim < 0)
+                   int alpha = 255, C *normals = nullptr, bool hero = false) {
+  if (st.anim < 0)
     return;
+  if (hero ? !spriteHeroReady() : !spriteCharactersReady())
+    return;
+  const CharIds &ids = hero ? heroIds : charIds;
+  CharSourceScope scope(hero ? heroAtlas : charAtlas);
   int dir;
   bool mirror;
   charFacing(angle, dir, mirror);
@@ -217,20 +292,32 @@ void drawCharActor(const CharOutfit &kit, const CharAnimState &st, float angle,
       drawCharLayer(v, st.anim, dir, st.frame, mirror, px, py, pal, flash,
                     alpha, normals);
   };
+  // Order matters. The cape and pack sit behind the body when the actor
+  // faces the camera and in front of it when he walks away; the pauldrons go
+  // under the head so their spikes never cover the face.
+  if (kit.cape && heroCape >= 0 && !facingAway)
+    L(heroCape);
   if (kit.pack && !facingAway)
-    L(charIds.pack);
-  L(kit.armedSleeves ? charIds.bodyArmed : charIds.body);
+    L(ids.pack);
+  L(kit.armedSleeves ? ids.bodyArmed : ids.body);
   if (kit.coat >= 0)
     L(kit.coat);
   if (kit.belt)
-    L(charIds.belt);
+    L(ids.belt);
   if (kit.accessory >= 0)
     L(kit.accessory);
   if (kit.pack && facingAway)
-    L(charIds.pack);
-  L(charIds.head);
-  if (kit.hair && kit.headgear < 0)
-    L(charIds.hair);
+    L(ids.pack);
+  if (kit.cape && heroCape >= 0 && facingAway)
+    L(heroCape);
+  if (kit.pauldrons && heroPauldrons >= 0)
+    L(heroPauldrons);
+  L(ids.head);
+  // The hero's circlet is designed to sit over the hair, so his long hair
+  // stays visible with every headgear except the hood.
+  if (kit.hair && (kit.headgear < 0 ||
+                   (hero && kit.headgear != ids.hood)))
+    L(ids.hair);
   if (kit.headgear >= 0)
     L(kit.headgear);
   if (kit.weapon >= 0)
@@ -315,6 +402,10 @@ CharOutfit playerOutfit() {
   else
     k.weapon = coreRarity >= 2 ? charIds.wSunsteel : charIds.wDawnblade;
   k.pack = true;
+  // Hero-only layers: the spiked pauldrons and cape the owner asked for.
+  // Plate armour gets both; the starting leather coat gets the cape only.
+  k.pauldrons = wearing && rarity >= 2;
+  k.cape = true;
   return k;
 }
 

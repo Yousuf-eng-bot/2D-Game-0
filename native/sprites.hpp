@@ -17,7 +17,7 @@
 
 namespace av {
 
-constexpr int CHAR_PALETTE_SLOTS = 24;
+constexpr int CHAR_PALETTE_SLOTS = 27;
 // Semantic palette slots, matching tools/charparts.py.
 enum CharSlot {
   CS_CLEAR = 0,
@@ -30,6 +30,8 @@ enum CharSlot {
   CS_HAIR_S = 17, CS_HAIR = 18, CS_HAIR_H = 19,
   CS_FUR_S = 20, CS_FUR = 21, CS_FUR_H = 22,
   CS_FLASH = 23,
+  // Blood ramp, used by the hero's weapons and armour spatter.
+  CS_BLOOD_S = 24, CS_BLOOD = 25, CS_BLOOD_H = 26,
 };
 
 struct CharPalette {
@@ -72,7 +74,7 @@ struct CharAtlas {
                size_t(d) * animFrames[a] + f;
     return i < index.size() ? &index[i] : nullptr;
   }
-} charAtlas, animalAtlas;
+} charAtlas, animalAtlas, heroAtlas;
 
 // Animals live in their own DWCA file: same container, different clip list.
 // `charSource` selects which one the blitter reads, so one code path serves

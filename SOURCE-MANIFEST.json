@@ -2,7 +2,7 @@
   "format": 1,
   "project": "Death World",
   "version": "0.9.2",
-  "file_count": 252,
+  "file_count": 257,
   "runtime_wav_count": 32,
   "scope": "Active source and required runtime assets; no private keys, user uploads, APKs, SDK/build caches, historical source ZIPs or old generated screenshot galleries.",
   "files": [
@@ -58,8 +58,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 4455,
-      "sha256": "c9c0adf2ce2e1374105e656d61d8e1c975e9704d59396a71a317069e7a17dcdf"
+      "bytes": 6197,
+      "sha256": "c7667b42700d58ab46f2d9073f5947f2b5b43cf488e11ad31237ad303d96e5ab"
     },
     {
       "path": "CMakeLists.txt",
@@ -104,7 +104,7 @@
     {
       "path": "android/assets/animals.dwa",
       "bytes": 668817,
-      "sha256": "a1b1fd111e75a18c1e8533e7c7eefbee04f7b2e525d1babe33b00e0bce2de5e4"
+      "sha256": "2d6277d36190dfd6b9561b4db911d437211c4b39d8d46f850774ebacb561beef"
     },
     {
       "path": "android/assets/audio/1.wav",
@@ -239,12 +239,17 @@
     {
       "path": "android/assets/characters.dwa",
       "bytes": 1475007,
-      "sha256": "f2d2501cbad28442fd11ef9d5623a6bb779cf3cd659934b6de2e2fa131829038"
+      "sha256": "13c1d45543929385739970849f34cb5c1464505e50b94cd07a68ad6ca89b498f"
     },
     {
       "path": "android/assets/cover.bin",
       "bytes": 460800,
       "sha256": "468437ff91b520b6c38f255eaf20bbc7cc23aa3143f3598ce776ed6babc7a847"
+    },
+    {
+      "path": "android/assets/hero.dwa",
+      "bytes": 3171643,
+      "sha256": "65182c4f04998921811325fbe3928cbcda62fce3e061ae2553ddd10382e18942"
     },
     {
       "path": "android/assets/licenses/GAME-LICENSE.txt",
@@ -303,8 +308,8 @@
     },
     {
       "path": "android/java/com/ashenveil/game/MainActivity.java",
-      "bytes": 19224,
-      "sha256": "eeae8a8f40de11187e4e1ab27bf07624b7e42ffbff0261319b3f58d4c5a97ed2"
+      "bytes": 19236,
+      "sha256": "aa2fdab6dee40947bff201c3d793c5ee8eb02a0ed02bd35ded31f28a3013570b"
     },
     {
       "path": "android/res/drawable/icon.xml",
@@ -363,8 +368,8 @@
     },
     {
       "path": "docs/character-art/STATUS.md",
-      "bytes": 9466,
-      "sha256": "3f84068859b5c06639c0bc48bd005d4c0ec3f9ec79f14a896c1185c184d3645c"
+      "bytes": 12721,
+      "sha256": "8eb3ad291cd42cae923ef7f1e2481a4b17725704bb5736439b7de7db16da3c33"
     },
     {
       "path": "docs/character-art/acc_cinder.png",
@@ -455,6 +460,11 @@
       "path": "docs/character-art/helm_steel.png",
       "bytes": 28685,
       "sha256": "025c02cc7433e0490072618c45c01e6e6c8a28aab49c38abd5835b115ea7fb5c"
+    },
+    {
+      "path": "docs/character-art/hero-preview.png",
+      "bytes": 45554,
+      "sha256": "b28b70725520a5b5d9f77f9cb37d4b0e2edfc42f0ada93689c7afd470a8d2a95"
     },
     {
       "path": "docs/character-art/hood.png",
@@ -823,8 +833,8 @@
     },
     {
       "path": "native/char_anim.hpp",
-      "bytes": 25050,
-      "sha256": "0ec43c5f11237b58987a603d96049ac38c90b2a78ed442c8dd4c32249401005b"
+      "bytes": 28389,
+      "sha256": "9420611c482d3b8b90df4bac3735e1477bcc45fbfe66c69fbd8de044be07efd2"
     },
     {
       "path": "native/combat.hpp",
@@ -833,8 +843,8 @@
     },
     {
       "path": "native/engine.cpp",
-      "bytes": 16160,
-      "sha256": "2c868d375ed67eb4f73088de0a1292204b8a084eacb31aa79a0e192d1202f521"
+      "bytes": 16305,
+      "sha256": "a237e34bba0d5eda6de4396a170f847fa4b84a7e719d926ebfb5222dca270d77"
     },
     {
       "path": "native/frontier.hpp",
@@ -883,8 +893,8 @@
     },
     {
       "path": "native/journey_visuals.hpp",
-      "bytes": 19301,
-      "sha256": "c963b86273e6df4a9891fbe23af9163eb9d845ed284ce3e7a0cbcabf48b993f7"
+      "bytes": 19333,
+      "sha256": "cfe95789b8d1ab480c82d08af4e0676605529b62c6d4210e263a68e256974d74"
     },
     {
       "path": "native/living_visuals.hpp",
@@ -898,8 +908,8 @@
     },
     {
       "path": "native/medium_visuals.hpp",
-      "bytes": 21148,
-      "sha256": "add3a3687f62751b4d645a0ffc113dcf1523714c7cc720e5cac6d3525c193caf"
+      "bytes": 21152,
+      "sha256": "27688970d57f4e5db8d729f3a885afec4d90088ece798070e31d28cee0ba7fd8"
     },
     {
       "path": "native/persistence.hpp",
@@ -918,8 +928,8 @@
     },
     {
       "path": "native/sprites.hpp",
-      "bytes": 9317,
-      "sha256": "af7c8d327cce6fcf262302ea6af29b3183780f14c933b299d2604fcb4b9111eb"
+      "bytes": 9443,
+      "sha256": "f8fa2714dc94a962439040766b4190a6e0fe9f2c62d2197b0bde5770ad1ed1a8"
     },
     {
       "path": "native/state.hpp",
@@ -968,8 +978,8 @@
     },
     {
       "path": "tests/character_tests.cpp",
-      "bytes": 13139,
-      "sha256": "7fea2165843416545f79026116f09aaf8521f824a0976f61bb27c06fb267a379"
+      "bytes": 15401,
+      "sha256": "674cf909f05049f052aba0a9fb8f250b64bdd60b659b76d66cb33e889f748e3c"
     },
     {
       "path": "tests/core_tests.cpp",
@@ -1168,8 +1178,13 @@
     },
     {
       "path": "tools/build_character_atlas.py",
-      "bytes": 16597,
-      "sha256": "58cd3a67edd292a962c95d90be3dd602e1e19f2cd4d1d6537cb663540c60812f"
+      "bytes": 16670,
+      "sha256": "37eb62126f644009420dd79e6b03c0274c38b83fc2d39ea03c37fa3c853be259"
+    },
+    {
+      "path": "tools/build_hero_atlas.py",
+      "bytes": 7191,
+      "sha256": "45c3e736377fa100c16123e3e919ea1b5da5054dc95eed900a938c7e231b6e92"
     },
     {
       "path": "tools/build_medium_gallery.py",
@@ -1188,8 +1203,8 @@
     },
     {
       "path": "tools/charparts.py",
-      "bytes": 15948,
-      "sha256": "f85b96191b50beae268ea792a97d05d0d3cf6574498af506a9fa9b6bff65926b"
+      "bytes": 15982,
+      "sha256": "6691691e2783df95f4ee848937c7c3f9d504253a9be99ec94ce023730081fb8e"
     },
     {
       "path": "tools/charrig.py",
@@ -1225,6 +1240,16 @@
       "path": "tools/generate_wood_audio.py",
       "bytes": 863,
       "sha256": "2baeab40495c5197a8aa6afbfd58a2b54d095d02479bd2f38c4985b7383d0e04"
+    },
+    {
+      "path": "tools/heroparts.py",
+      "bytes": 22994,
+      "sha256": "82346362fab4b12d559e655488a49de28450dcea9a89c921822a2aabdad6195f"
+    },
+    {
+      "path": "tools/herorig.py",
+      "bytes": 5352,
+      "sha256": "9dc267ac09ae4d307a46d41b83458ca9c9338aac34b69ee5309e7800a0c72460"
     },
     {
       "path": "tools/make_medium_preview.py",

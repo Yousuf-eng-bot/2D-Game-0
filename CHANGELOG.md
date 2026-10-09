@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- **Redesigned main character, at roughly three times the detail.** New rig
+  and layer set (`tools/herorig.py`, `tools/heroparts.py`,
+  `tools/build_hero_atlas.py`) bake `android/assets/hero.dwa` on an 80x96
+  cell with a ~62 px figure: long flowing hair, filigreed plate with a fauld,
+  spiked pauldrons, a five-panel cape, a horned circlet, and a fullered
+  greatsword with deterministic blood spatter and a drip. Loaded as a third
+  atlas and selected with `drawCharActor(..., hero=true)`, so both quality
+  tiers draw the same hero and every existing clip keeps working.
+- Palette gained a blood ramp (slots 24-26); `CHAR_PALETTE_SLOTS` is now 27.
+
+### Added
 - **Equipment art completed.** New baked layers `w_sunsteel` (rare weapon
   core), `acc_talisman` and `acc_cinder` on a new `accessory` slot, wired to
   the trinket slot `g.eq[2]` and the weapon core rarity, so every equippable

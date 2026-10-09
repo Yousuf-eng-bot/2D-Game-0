@@ -24,7 +24,8 @@ METAL = Ramp(OUTLINE, 11, 12, 13)
 ACCENT = Ramp(OUTLINE, 14, 15, 16)
 HAIR = Ramp(OUTLINE, 17, 18, 19)
 FUR = Ramp(OUTLINE, 20, 21, 22)
-PALETTE_SLOTS = 24
+BLOOD = Ramp(OUTLINE, 24, 25, 26)
+PALETTE_SLOTS = 27
 
 
 def _order(sk: Skeleton):

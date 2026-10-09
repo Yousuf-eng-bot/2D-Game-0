@@ -4,7 +4,7 @@ void drawJourneyRanger(int x, int y, float phase, bool moving) {
   // Baked layered sprites when the character atlas shipped with the build;
   // otherwise fall through to the original procedural ranger so the look is
   // preserved on any build without the asset.
-  if (spriteCharactersReady()) {
+  if (spriteHeroReady()) {
     float a = j.active ? j.aim : std::atan2(g.fy, g.fx);
     int fy = y - int(j.z);
     ellipse(x, y + 2, std::max(6, 13 - int(j.z / 8)), 4, 0xff364133);
@@ -14,7 +14,8 @@ void drawJourneyRanger(int x, int y, float phase, bool moving) {
     int kx = x, ky = fy;
     charKnockback(g.hurtTime, g.hurtx, g.hurty, kx, ky);
     charLunge(a, kx, ky);
-    drawCharActor(playerOutfit(), playerAnim, a, kx, ky, PAL_PLAYER, flash);
+    drawCharActor(playerOutfit(), playerAnim, a, kx, ky, PAL_PLAYER, flash, 255,
+                  nullptr, true);
     drawBodyMarks(kx, ky);
     drawActorDust(x, y, a);
     return;

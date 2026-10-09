@@ -318,6 +318,56 @@ int main() {
     j.active = false;
   }
 
+  // ---- hero atlas --------------------------------------------------------
+  auto heroAsset = std::filesystem::path(__FILE__).parent_path()
+                       .parent_path() / "android/assets/hero.dwa";
+  CHECK(std::filesystem::exists(heroAsset));
+  CHECK(loadCharacterAtlas(heroAsset.string(), heroAtlas));
+  bindHeroAtlas();
+  CHECK(spriteHeroReady());
+  // The hero is deliberately baked bigger than every other actor.
+  CHECK(heroAtlas.cellW > charAtlas.cellW);
+  CHECK(heroAtlas.cellH > charAtlas.cellH);
+  CHECK(heroAtlas.dirs == charAtlas.dirs);
+  CHECK(heroAtlas.animName.size() == charAtlas.animName.size());
+  // Same clip names and frame counts, so every state machine still works.
+  for (size_t a = 0; a < charAtlas.animName.size(); a++) {
+    CHECK(heroAtlas.animName[a] == charAtlas.animName[a]);
+    CHECK(heroAtlas.animFrames[a] == charAtlas.animFrames[a]);
+  }
+  const char *heroLayers[] = {"body", "body_armed", "head",  "hair",
+                              "hood", "helm_steel", "coat_ranger",
+                              "coat_mail", "pauldrons", "cape", "belt",
+                              "pack", "w_dawnblade", "w_riftaxe",
+                              "acc_cinder"};
+  for (const char *n : heroLayers)
+    CHECK(heroAtlas.variant(n) >= 0);
+  CHECK(heroPauldrons >= 0 && heroCape >= 0);
+  // Every hero cell must exist and stay inside the shared cell and anchor.
+  for (int v = 0; v < int(heroAtlas.variantName.size()); v++)
+    for (int a = 0; a < int(heroAtlas.animName.size()); a++)
+      for (int d = 0; d < heroAtlas.dirs; d++)
+        for (int f = 0; f < heroAtlas.animFrames[a]; f++) {
+          const SpriteRect *r = heroAtlas.at(v, a, d, f);
+          CHECK(r != nullptr);
+          CHECK(r->ox + r->w <= heroAtlas.cellW);
+          CHECK(r->oy + r->h <= heroAtlas.cellH);
+        }
+  // The player's kit asks for the hero-only layers.
+  {
+    g.eq[1] = 102;
+    CharOutfit k = playerOutfit();
+    CHECK(k.cape);
+    CHECK(k.pauldrons);
+    // Drawing the hero must restore the previous atlas afterwards.
+    CharAnimState st;
+    st.anim = heroIds.aIdle;
+    st.frame = 0;
+    drawCharActor(k, st, PI / 2, W / 2, H / 2, PAL_PLAYER, 0, 255, nullptr,
+                  true);
+    CHECK(charSource == &charAtlas);
+  }
+
   // ---- a missing atlas falls back instead of crashing --------------------
   CHECK(!loadCharacterAtlas((root / "no-such-file.dwa").string()));
   CHECK(spriteCharactersReady()); // previous atlas still valid

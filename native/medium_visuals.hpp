@@ -164,7 +164,7 @@ void drawMediumPlayer(int x,int y,float phase,bool moving) {
   // Medium and Low now share one baked character, so the player looks and
   // animates identically on both quality tiers. Medium adds its own extras:
   // real normal lighting, the dash echo trail, swing arcs and landing dust.
-  if(spriteCharactersReady()){
+  if(spriteHeroReady()){
     if(g.hp<=0)mediumPlayerDeath+=renderDt;else mediumPlayerDeath=0;
     for(int r=0;r<3;r++)ellipse(x,y+2,15-r*2,4-r,0xff2c3733);
     int flash=g.hurtTime>0?int(std::min(1.f,g.hurtTime/.22f)*190):0;
@@ -174,10 +174,10 @@ void drawMediumPlayer(int x,int y,float phase,bool moving) {
     int fy=y-int(j.z);
     if(g.dash>0)for(int k=3;k>=1;k--)
       drawCharActor(kit,playerAnim,facing,x-int(g.fx*k*7),fy-int(g.fy*k*5),
-                    PAL_PLAYER,0,35+k*12,nullptr);
+                    PAL_PLAYER,0,35+k*12,nullptr,true);
     int kx=x,ky=fy;charKnockback(g.hurtTime,g.hurtx,g.hurty,kx,ky);charLunge(facing,kx,ky);
     drawCharActor(kit,playerAnim,facing,kx,ky,PAL_PLAYER,flash,alpha,
-                  surfaceNormals);
+                  surfaceNormals,true);
     if(g.hp<=0)return;
     int hx=x+(std::cos(facing)>=0?13:-13),hy=fy-26;
     if(j.counter>0)arc(x,fy-31,27,-PI*.9f,PI*.1f,0xffe6d39b,2);
