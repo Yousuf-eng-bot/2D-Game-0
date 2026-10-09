@@ -258,6 +258,19 @@ void bindHeroAtlas() {
 
 bool spriteHeroReady() { return heroAtlas.ready && heroIds.ok; }
 
+// One-line art status, shown on the home screen. When an atlas fails to load
+// the game silently falls back to the old procedural art, which looks exactly
+// like "the update did nothing" - this line says which file is missing.
+bool spriteAnimalsReady();
+
+std::string artStatus() {
+  std::string s;
+  s += spriteHeroReady() ? "HERO" : "hero!";
+  s += spriteCharactersReady() ? " CHARS" : " chars!";
+  s += spriteAnimalsReady() ? " ANIMALS" : " animals!";
+  return s;
+}
+
 
 // ---------------------------------------------------------------------------
 // Layered composition

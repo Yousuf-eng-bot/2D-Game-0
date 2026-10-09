@@ -1119,6 +1119,9 @@ void uFront() {
     // Build id, so a tester can tell two test APKs apart at a glance.
     uText(40, 326, std::string("0.8 / CLEAR PLAY / BUILD ") + DW_BUILD_ID,
           UMUTED, 10);
+    // Art pack status. Lower-case with a bang means that atlas failed to
+    // load and the game is drawing the old fallback art.
+    uText(40, 340, std::string("ART ") + artStatus(), UMUTED, 10);
     return;
   }
   if (g.scene == WORLDS) {

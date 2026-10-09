@@ -210,6 +210,23 @@ cape, and a dangerous blood-stained weapon, at much higher detail.
   switches atlas and id table, so Low and Medium both draw the same hero and
   every existing animation clip works unchanged.
 
+## Install troubleshooting
+
+If Android says **"App not installed as package appears to be invalid"**:
+
+1. Prefer **`Death-World-Test-arm64.apk`** - about half the size of the
+   three-ABI build, so far less likely to arrive truncated.
+2. Compare the downloaded file's size with the table in the workflow run
+   summary (or `CHECKSUMS.txt` in the artifact). A smaller file means the
+   download was cut short; download it again, ideally over Wi-Fi.
+3. The build itself is now self-verifying: the job fails rather than
+   publishing an APK whose zip, alignment, signature or required entries are
+   wrong.
+
+Once installed, the home screen shows `BUILD <sha>` and `ART HERO CHARS
+ANIMALS`. If any of those three words is lower-case with a `!`, that atlas
+did not load and the game is drawing the old art.
+
 ## Still open
 
 - Art quality is a first pass. Proportions were corrected once after review,

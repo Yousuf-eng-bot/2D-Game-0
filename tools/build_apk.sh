@@ -28,7 +28,11 @@ DEST="${APK_OUTPUT:-$ROOT/Death-World-0.9.2-Thermal-Fix.apk}"
 BUILD_ID="$(printf %.7s "${DW_BUILD_ID:-local}")"
 rm -rf "$BUILD/classes" "$BUILD/dex" "$BUILD/gen" "$BUILD/lib"
 mkdir -p "$BUILD/classes" "$BUILD/dex" "$BUILD/gen" "$(dirname "$KEY")"
-for ABI in arm64-v8a armeabi-v7a x86_64; do
+# Which ABIs to package. A single-ABI build is a much smaller download, which
+# matters when the APK is sideloaded over a phone connection - a truncated
+# download is reported by Android as "package appears to be invalid".
+APK_ABIS="${APK_ABIS:-arm64-v8a armeabi-v7a x86_64}"
+for ABI in $APK_ABIS; do
  case "$ABI" in
   arm64-v8a) COMPILER=aarch64-linux-android23-clang++;;
   armeabi-v7a) COMPILER=armv7a-linux-androideabi23-clang++;;
@@ -44,7 +48,7 @@ javac --release 8 -encoding UTF-8 -classpath "$JAR" -d "$BUILD/classes" "$ROOT/a
 mapfile -t CLASSES < <(find "$BUILD/classes" -name '*.class')
 "$BT/d8" --min-api 23 --lib "$JAR" --output "$BUILD/dex" "${CLASSES[@]}"
 cp "$BUILD/base.apk" "$BUILD/unsigned.apk"
-(cd "$BUILD" && zip -q -r unsigned.apk lib)
+(cd "$BUILD" && zip -q -r -0 unsigned.apk lib)
 (cd "$BUILD/dex" && zip -q "$BUILD/unsigned.apk" classes.dex)
 "$BT/zipalign" -f -p 4 "$BUILD/unsigned.apk" "$BUILD/aligned.apk"
 if [[ ! -f "$KEY" ]]; then
@@ -52,6 +56,31 @@ if [[ ! -f "$KEY" ]]; then
 fi
 # TESTING KEY ONLY: do not reuse this development signing configuration for production.
 "$BT/apksigner" sign --ks "$KEY" --ks-pass pass:android --key-pass pass:android --ks-key-alias ashen-prototype --out "$DEST" "$BUILD/aligned.apk"
-"$BT/apksigner" verify --verbose --print-certs "$DEST"
-"$BT/aapt" dump badging "$DEST"
+# ---------------------------------------------------------------------------
+# Verification. A signed APK can still be unusable - a bad zip structure or a
+# misaligned entry makes Android refuse it with "package appears to be
+# invalid" - so every one of these has to pass before the file is published.
+# ---------------------------------------------------------------------------
+echo "--- zip structure"
+unzip -t "$DEST" >/dev/null
+echo "zip OK"
+echo "--- alignment"
+"$BT/zipalign" -c -v 4 "$DEST" >/dev/null
+echo "alignment OK"
+echo "--- signature"
+"$BT/apksigner" verify --verbose --print-certs --min-sdk-version 23 "$DEST"
+echo "--- manifest"
+"$BT/aapt" dump badging "$DEST" | head -5
+echo "--- required entries"
+for entry in classes.dex AndroidManifest.xml resources.arsc \
+             assets/characters.dwa assets/hero.dwa assets/animals.dwa; do
+  unzip -l "$DEST" | grep -q "$entry" || { echo "MISSING $entry" >&2; exit 1; }
+done
+for ABI in $APK_ABIS; do
+  unzip -l "$DEST" | grep -q "lib/$ABI/libashen.so" ||
+    { echo "MISSING lib/$ABI/libashen.so" >&2; exit 1; }
+done
+echo "entries OK"
 echo "APK created: $DEST"
+ls -l "$DEST"
+sha256sum "$DEST"

@@ -76,14 +76,51 @@ jobs:
           DW_BUILD_ID: ${{ github.sha }}
         run: bash tools/build_apk.sh
 
+      - name: Build a small arm64-only APK
+        env:
+          ANDROID_NDK_HOME: ${{ steps.paths.outputs.ndk }}
+          ANDROID_BUILD_TOOLS: ${{ steps.paths.outputs.bt }}
+          ANDROID_JAR: ${{ steps.paths.outputs.jar }}
+          ALLOW_NEW_SIGNING_KEY: "1"
+          SIGNING_KEY: ${{ runner.temp }}/disposable-test.jks
+          APK_OUTPUT: ${{ github.workspace }}/Death-World-Test-arm64.apk
+          APK_ABIS: arm64-v8a
+          DW_BUILD_ID: ${{ github.sha }}
+        # Roughly half the size of the three-ABI build and the right one for
+        # any phone from the last several years. A smaller download is much
+        # less likely to arrive truncated, which Android reports as
+        # "package appears to be invalid".
+        run: bash tools/build_apk.sh
+
       - name: Report artifact identity
         run: |
-          ls -l "${{ inputs.output_name || 'Death-World-Test.apk' }}"
-          sha256sum "${{ inputs.output_name || 'Death-World-Test.apk' }}"
+          set -eux
+          ls -l Death-World-Test.apk Death-World-Test-arm64.apk
+          sha256sum Death-World-Test.apk Death-World-Test-arm64.apk \
+            | tee CHECKSUMS.txt
+          {
+            echo "## Test APK"
+            echo
+            echo "Build id shown on the game's home screen: \`$(echo ${{ github.sha }} | cut -c1-7)\`"
+            echo
+            echo '| file | bytes | sha256 |'
+            echo '| --- | --- | --- |'
+            for f in Death-World-Test-arm64.apk Death-World-Test.apk; do
+              echo "| $f | $(stat -c%s $f) | $(sha256sum $f | cut -d" " -f1) |"
+            done
+            echo
+            echo 'Install the **arm64** one unless your phone is very old.'
+            echo 'If Android says "package appears to be invalid", the'
+            echo 'download is truncated - check the size against the table.'
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - uses: actions/upload-artifact@v4
         with:
           name: death-world-test-apk-${{ github.sha }}
-          path: ${{ inputs.output_name || 'Death-World-Test.apk' }}
+          path: |
+            Death-World-Test-arm64.apk
+            Death-World-Test.apk
+            CHECKSUMS.txt
           if-no-files-found: error
           retention-days: 14
+          compression-level: 0

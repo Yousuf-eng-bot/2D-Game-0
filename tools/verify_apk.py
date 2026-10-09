@@ -18,9 +18,14 @@ assert 'Verified using v2 scheme (APK Signature Scheme v2): true' in sig
 assert 'Verified using v3 scheme (APK Signature Scheme v3): true' in sig
 print('PASS original certificate, v1/v2/v3 verification:', expected_cert)
 badging=run(bt/'aapt','dump','badging',apk)
-assert "name='com.ashenveil.game' versionCode='11' versionName='0.9.2'" in badging
+# Read the expected version from the manifest rather than hard-coding it, so
+# bumping versionCode does not silently invalidate this check.
+manifest=(root/'android/AndroidManifest.xml').read_text()
+code=re.search(r'android:versionCode="(\d+)"',manifest).group(1)
+name=re.search(r'android:versionName="([^"]+)"',manifest).group(1)
+assert f"name='com.ashenveil.game' versionCode='{code}' versionName='{name}'" in badging
 for x in ["sdkVersion:'23'", "targetSdkVersion:'35'", "application-label:'Death World'"]:assert x in badging
-print('PASS package, label, code 11 / 0.9.2, minimum API23 / target API35')
+print(f'PASS package, label, code {code} / {name}, minimum API23 / target API35')
 permissions=run(bt/'aapt','dump','permissions',apk)
 assert 'uses-permission' not in permissions
 print('PASS no requested Android permissions')

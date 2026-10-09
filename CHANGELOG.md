@@ -6,6 +6,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+- **Test APK could fail to install** with "package appears to be invalid".
+  `tools/build_apk.sh` now stores the native libraries uncompressed so
+  `zipalign` can page-align them, and refuses to publish an APK unless the
+  zip structure (`unzip -t`), the alignment (`zipalign -c`), the signature
+  (`apksigner verify --min-sdk-version 23`) and every required entry
+  (`classes.dex`, the manifest, `resources.arsc`, all three atlases and each
+  requested ABI's `libashen.so`) are all present and valid.
+- `versionCode` bumped to 12 (`0.9.3-test`) so a stale install can never
+  conflict with the new test build.
+- `tools/verify_apk.py` reads the expected version from the manifest instead
+  of hard-coding it.
+
+### Added
+- The CI job also builds a **small arm64-only APK** next to the three-ABI
+  one, and publishes `CHECKSUMS.txt` plus a run summary table of sizes and
+  SHA-256 hashes, so a truncated download can be identified immediately.
+- The home screen prints an **art pack status line** (`ART HERO CHARS
+  ANIMALS`). A lower-case entry with a bang means that atlas failed to load
+  and the game is drawing the old fallback art - which previously looked
+  exactly like "the update changed nothing".
+
 ### Added
 - **Redesigned main character, at roughly three times the detail.** New rig
   and layer set (`tools/herorig.py`, `tools/heroparts.py`,
